@@ -1,6 +1,6 @@
 class ForeachBinding extends BindingBase {
   Iterable _iterable;
-  ObservableList _observableList;
+  ListViewModel _observableList;
   List<Element> _elementTemplate;
   List<BindingGroup> _itemBindingGroups;
 
@@ -28,7 +28,7 @@ class ForeachBinding extends BindingBase {
     }
   }
 
-  void _observableListChanged(ObservableListChangedEvent event) {
+  void _observableListChanged(ListChangedEvent event) {
     _bindToItems();
   }
 
@@ -40,14 +40,14 @@ class ForeachBinding extends BindingBase {
       _observableList = null;
     }
 
-    if (current is ObservableList) {
+    if (current is ListViewModel) {
       _observableList = current;
       _observableList.addHandler(_observableListChanged);
       _iterable = current;
     } else if (current is Iterable) {
       _iterable = current;
     } else if (current == null) {
-      var newList = new ObservableList<ViewModel>();
+      var newList = new ListViewModel<ViewModel>();
       modelValue = newList;
       _observableList = newList;
       _iterable = newList;

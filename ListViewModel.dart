@@ -1,22 +1,22 @@
-class ObservableList<E> implements List {
+class ListViewModel<E> implements List {
   List<E> _inner;
-  List<ObservableListChangedListener> _listListeners;
+  List<ListChangedListener> _listListeners;
 
-  ObservableList([int length]) {
-    _listListeners = new List<ObservableListChangedListener>();
+  ListViewModel([int length]) {
+    _listListeners = new List<ListChangedListener>();
     _inner = new List(length);
   }
 
-  ObservableList.from(Iterable<E> other) {
-    _listListeners = new List<ObservableListChangedListener>();
+  ListViewModel.from(Iterable<E> other) {
+    _listListeners = new List<ListChangedListener>();
     _inner = new List.from(other);
   }
 
-  void addHandler(ObservableListChangedListener listener) {
+  void addHandler(ListChangedListener listener) {
     _listListeners.add(listener);
   }
 
-  void removeHandler(ObservableListChangedListener listener) {
+  void removeHandler(ListChangedListener listener) {
     int index = _listListeners.indexOf(listener);
 
     if (index >= 0) {
@@ -26,9 +26,9 @@ class ObservableList<E> implements List {
 
   void _notifyListListeners() {
     //TODO: add more details to event, so the listener must not rescan the list
-    ObservableListChangedEvent event = new ObservableListChangedEvent(this);
+    ListChangedEvent event = new ListChangedEvent(this);
 
-    _listListeners.forEach((ObservableListChangedListener l) => l(event));
+    _listListeners.forEach((ListChangedListener l) => l(event));
   }
 
   void operator []=(int index, E value) {

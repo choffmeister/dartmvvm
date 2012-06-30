@@ -4,11 +4,13 @@
 #import('dart:html');
 #import('dart:json');
 
+#import('../CommonLibrary.dart');
+
 #source('PropertyChangedEvent.dart');
-#source('ObservableListChangedEvent.dart');
-#source('ObservableList.dart');
-#source('BindingDescription.dart');
+#source('ListChangedEvent.dart');
 #source('ViewModel.dart');
+#source('ListViewModel.dart');
+#source('BindingDescription.dart');
 #source('Converters/BindingConverter.dart');
 #source('Converters/IntegerConverter.dart');
 #source('Converters/DoubleConverter.dart');
