@@ -1,59 +1,105 @@
 interface ViewModelBinder default ViewModelBinderImpl {
   ViewModelBinder();
 
-  ViewModelBindingGroup createGroup(ViewModel viewModel, Element baseElement);
+  BindingGroup createGroup(ViewModel viewModel, Element baseElement);
 
-  ViewModelBindingGroup createGroupOnMultipleElements(ViewModel viewModel, Iterable<Element> baseElements);
+  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Iterable<Element> baseElements);
 
-  ViewModelPropertyBindingBase createBinding(ViewModel viewModel, ViewModelBindingDescription bindingDescription, Element element);
+  BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription bindingDescription);
 }
 
 class ViewModelBinderImpl implements ViewModelBinder {
   ViewModel _viewModel;
   Element _element;
 
-  ViewModelBindingGroup createGroup(ViewModel viewModel, Element baseElement) {
+  BindingGroup createGroup(ViewModel viewModel, Element baseElement) {
     List<Element> baseElements = new List<Element>();
     baseElements.add(baseElement);
 
-    return new ViewModelBindingGroup(this, viewModel, baseElements);
+    return new BindingGroup(this, viewModel, baseElements);
   }
 
-  ViewModelBindingGroup createGroupOnMultipleElements(ViewModel viewModel, Iterable<Element> baseElements) {
-    return new ViewModelBindingGroup(this, viewModel, baseElements);
+  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Iterable<Element> baseElements) {
+    return new BindingGroup(this, viewModel, baseElements);
   }
 
-  ViewModelPropertyBindingBase createBinding(ViewModel viewModel, ViewModelBindingDescription bindingDescription, Element element) {
-    ViewModelPropertyBindingBase binding = null;
+  BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription desc) {
+    BindingBase binding = null;
+    desc.viewModel = viewModel;
+    desc.element = element;
 
-    if (bindingDescription.type != null) {
-      switch (bindingDescription.type) {
-        case 'value': binding = new ValueViewModelPropertyBinding(this, viewModel, bindingDescription, element); break;
-        case 'click': binding = new ClickViewModelPropertyBinding(this, viewModel, bindingDescription, element); break;
-        case 'text': binding = new TextViewModelPropertyBinding(this, viewModel, bindingDescription, element); break;
-        case 'tristate': binding = new TriStateViewModelPropertyBinding(this, viewModel, bindingDescription, element); break;
-        case 'visibility': binding = new VisibilityViewModelPropertyBinding(this, viewModel, bindingDescription, element); break;
-        case 'foreach': binding = new ForeachViewModelPropertyBinding(this, viewModel, bindingDescription, element); break;
+    if (desc.typeName != null) {
+      switch (desc.typeName) {
+        case 'value': binding = new ValueBinding(this, desc); break;
+        case 'click': binding = new ClickBinding(this, desc); break;
+        case 'text': binding = new TextBinding(this, desc); break;
+        case 'tristate': binding = new TriStateBinding(this, desc); break;
+        case 'visibility': binding = new VisibilityBinding(this, desc); break;
+        case 'foreach': binding = new ForeachBinding(this, desc); break;
+        default: throw 'Unknown binding type';
       }
     } else {
-      binding = _guessBindingType(viewModel, bindingDescription, element);
+      binding = _guessBindingType(desc);
     }
 
-    if (binding == null) {
-      //TODO: make it configurable, if an exception should be thrown
-      //throw 'Could not guess binding type, so please specify explicitly';
+    if (binding != null) {
+      _attachConverters(desc);
+      _attachValidators(desc);
     }
 
     return binding;
   }
 
-  ViewModelPropertyBindingBase _guessBindingType(ViewModel viewModel, ViewModelBindingDescription bindingDescription, Element element) {
-    if (element is InputElement) {
-      return new ValueViewModelPropertyBinding(this, viewModel, bindingDescription, element);
-    } else if (element is ButtonElement) {
-      return new ClickViewModelPropertyBinding(this, viewModel, bindingDescription, element);
-    } else {
-      return null;
+  BindingBase _guessBindingType(BindingDescription desc) {
+    if (desc.element is InputElement) {
+      if (desc.element.attributes['type'].toLowerCase() == 'submit') {
+        return new ClickBinding(this, desc);
+      } else {
+        return new ValueBinding(this, desc);
+      }
+    } else if (desc.element is ButtonElement) {
+      return new ClickBinding(this, desc);
+    } else if (desc.element is DivElement || desc.element is SpanElement || desc.element is ParagraphElement || desc.element is OptionElement) {
+      return new TextBinding(this, desc);
+    } else if (desc.element is SelectElement) {
+      return new ForeachBinding(this, desc);
+    }
+
+    return null;
+  }
+
+  void _attachConverters(BindingDescription desc) {
+    for (String converterName in desc.converterNames) {
+      switch (converterName) {
+        case 'int': desc.converterInstances.add(new IntegerConverter()); break;
+        case 'double': desc.converterInstances.add(new DoubleConverter()); break;
+        default: throw 'Unknown converter type';
+      }
+    }
+
+    if (desc.converterInstances.length == 0) {
+      if (desc.bindingInstance is ValueBinding && desc.element is InputElement) {
+        desc.converterInstances.add(new NormalizedStringConverter());
+      } else if (desc.bindingInstance is TextBinding) {
+        desc.converterInstances.add(new NormalizedStringConverter());
+      }
+    }
+  }
+
+  void _attachValidators(BindingDescription desc) {
+    if (desc.converterInstances.some((c) => c is IntegerConverter)) {
+      desc.validatorInstances.add(new IntegerValidator());
+    }
+    if (desc.converterInstances.some((c) => c is DoubleConverter)) {
+      desc.validatorInstances.add(new DoubleValidator());
+    }
+
+    for (String validatorName in desc.validatorNames) {
+      switch (validatorName) {
+        case 'int': desc.validatorInstances.add(new IntegerValidator()); break;
+        case 'double': desc.validatorInstances.add(new DoubleValidator()); break;
+        default: throw 'Unknown validator type';
+      }
     }
   }
 }

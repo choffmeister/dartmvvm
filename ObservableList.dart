@@ -1,87 +1,89 @@
 class ObservableList<E> implements List {
   List<E> _inner;
-  List<ObservableListChangedListener> _listeners;
+  List<ObservableListChangedListener> _listListeners;
 
-  ObservableList([int length]) : this.from(new List(length)) {
+  ObservableList([int length]) {
+    _listListeners = new List<ObservableListChangedListener>();
+    _inner = new List(length);
   }
 
   ObservableList.from(Iterable<E> other) {
-    _listeners = new List<ObservableListChangedListener>();
+    _listListeners = new List<ObservableListChangedListener>();
     _inner = new List.from(other);
   }
 
   void addHandler(ObservableListChangedListener listener) {
-    _listeners.add(listener);
+    _listListeners.add(listener);
   }
 
   void removeHandler(ObservableListChangedListener listener) {
-    int index = _listeners.indexOf(listener);
+    int index = _listListeners.indexOf(listener);
 
     if (index >= 0) {
-      _listeners.removeRange(index, 1);
+      _listListeners.removeRange(index, 1);
     }
   }
 
-  void _notifyListeners() {
+  void _notifyListListeners() {
     //TODO: add more details to event, so the listener must not rescan the list
     ObservableListChangedEvent event = new ObservableListChangedEvent(this);
 
-    _listeners.forEach((ObservableListChangedListener l) => l(event));
+    _listListeners.forEach((ObservableListChangedListener l) => l(event));
   }
 
   void operator []=(int index, E value) {
     _inner[index] = value;
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void set length(int newLength) {
     _inner.length = newLength;
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void add(E value) {
     _inner.add(value);
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void addLast(E value) {
     _inner.add(value);
-    _notifyListeners();
+    _notifyListListeners();
   }
   void addAll(Collection<E> collection) {
     _inner.addAll(collection);
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void sort(int compare(E a, E b)) {
     _inner.sort(compare);
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void clear() {
     _inner.clear();
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   E removeLast() {
     E item = _inner.removeLast();
-    _notifyListeners();
+    _notifyListListeners();
     return item;
   }
 
   void setRange(int start, int length, List<E> from, [int startFrom]) {
     _inner.setRange(start, length, from, startFrom);
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void removeRange(int start, int length) {
     _inner.removeRange(start, length);
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   void insertRange(int start, int length, [E initialValue]) {
     _inner.insertRange(start, length, initialValue);
-    _notifyListeners();
+    _notifyListListeners();
   }
 
   Iterator<E> iterator() => _inner.iterator();

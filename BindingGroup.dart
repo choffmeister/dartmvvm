@@ -1,11 +1,11 @@
-class ViewModelBindingGroup {
+class BindingGroup {
   ViewModelBinder _viewModelBinder;
   ViewModel _viewModel;
   List<Element> _baseElements;
   List<Element> _elements;
-  List<ViewModelPropertyBindingBase> _bindings;
+  List<BindingBase> _bindings;
 
-  ViewModelBindingGroup(ViewModelBinder viewModelBinder, ViewModel viewModel, Iterable<Element> baseElements)
+  BindingGroup(ViewModelBinder viewModelBinder, ViewModel viewModel, Iterable<Element> baseElements)
     : _viewModelBinder = viewModelBinder, _viewModel = viewModel
   {
       _baseElements = new List<Element>.from(baseElements);
@@ -16,7 +16,7 @@ class ViewModelBindingGroup {
         baseElement.queryAll('*').filter((e) => e is Element).forEach((Element e) => _elements.add(e));
       }
 
-      _bindings = new List<ViewModelPropertyBindingBase>();
+      _bindings = new List<BindingBase>();
   }
 
   void apply() {
@@ -29,21 +29,15 @@ class ViewModelBindingGroup {
         Iterable<Match> matches = splitRegex.allMatches(bindString);
 
         for (Match match in matches) {
-          ViewModelBindingDescription bindingDescription = new ViewModelBindingDescription.parse(match[0]);
+          BindingDescription bindingDescription = new BindingDescription.parse(match[0]);
 
           if (bindingDescription.isValid) {
             String propertyName = bindingDescription.propertyName;
+            BindingBase binding = _viewModelBinder.createBinding(_viewModel, subElement, bindingDescription);
 
-            if (_viewModel.containsKey(propertyName)) {
-              ViewModelPropertyBindingBase binding = _viewModelBinder.createBinding(_viewModel, bindingDescription, subElement);
-
-              if (binding != null) {
-                binding.apply();
-                _bindings.add(binding);
-              }
-            } else {
-              //TODO: make it configurable, if an exception should be thrown
-              //throw 'View model does not have a property $propertyName';
+            if (binding != null) {
+              binding.apply();
+              _bindings.add(binding);
             }
           }
         }
@@ -52,7 +46,7 @@ class ViewModelBindingGroup {
   }
 
   void unapply() {
-    _bindings.forEach((ViewModelPropertyBindingBase binding) => binding.unapply());
+    _bindings.forEach((BindingBase binding) => binding.unapply());
     _bindings.clear();
   }
 }

@@ -1,8 +1,18 @@
-class ViewModel {
+interface ViewModel default ViewModelImpl {
+  ViewModel();
+
+  void addListener(PropertyChangedListener listener);
+  void removeListener(PropertyChangedListener listener);
+
+  operator [](String key);
+  operator []=(String, Object value);
+}
+
+class ViewModelImpl implements ViewModel {
   Map _values;
   List<PropertyChangedListener> _listeners;
 
-  ViewModel() : _values = new Map(), _listeners = new List<PropertyChangedListener>() {
+  ViewModelImpl() : _values = new Map(), _listeners = new List<PropertyChangedListener>() {
   }
 
   void addListener(PropertyChangedListener listener) {
@@ -39,14 +49,14 @@ class ViewModel {
   // expose the most Map methods to the public
   bool containsValue(value) => _values.containsValue(value);
   bool containsKey(value) => _values.containsKey(value);
-  operator [](key) {
+  operator [](String key) {
     if (this.containsKey(key)) {
       return _values[key];
     } else {
       return null;
     }
   }
-  operator []=(key, value) {
+  operator []=(String key, Object value) {
     var currentValue = this[key];
     if (currentValue != value) {
       _values[key] = value;
