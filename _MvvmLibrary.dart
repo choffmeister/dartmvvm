@@ -4,7 +4,7 @@
 #import('dart:html');
 #import('dart:json');
 
-#import('../CommonLibrary.dart');
+#import('../_CommonLibrary.dart');
 
 #source('PropertyChangedEvent.dart');
 #source('ListChangedEvent.dart');
