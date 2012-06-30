@@ -16,6 +16,7 @@
 #source('Converters/DoubleConverter.dart');
 #source('Converters/BooleanConverter.dart');
 #source('Converters/NormalizedStringConverter.dart');
+#source('Converters/GuidConverter.dart');
 #source('Validators/ValidationError.dart');
 #source('Validators/BindingValidator.dart');
 #source('Validators/IntegerValidator.dart');

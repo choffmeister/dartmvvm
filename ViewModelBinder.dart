@@ -59,9 +59,9 @@ class ViewModelBinderImpl implements ViewModelBinder {
       }
     } else if (desc.element is ButtonElement) {
       return new ClickBinding(this, desc);
-    } else if (desc.element is DivElement || desc.element is SpanElement || desc.element is ParagraphElement || desc.element is OptionElement) {
+    } else if (desc.element is DivElement || desc.element is SpanElement || desc.element is ParagraphElement || desc.element is OptionElement || desc.element is TableCellElement) {
       return new TextBinding(this, desc);
-    } else if (desc.element is SelectElement) {
+    } else if (desc.element is SelectElement || desc.element is TableSectionElement) {
       return new ForeachBinding(this, desc);
     }
 
@@ -74,6 +74,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'int': desc.converterInstances.add(new IntegerConverter()); break;
         case 'double': desc.converterInstances.add(new DoubleConverter()); break;
         case 'bool': desc.converterInstances.add(new BooleanConverter()); break;
+        case 'guid': desc.converterInstances.add(new GuidConverter()); break;
         default: throw 'Unknown converter type';
       }
     }
