@@ -3,6 +3,10 @@ class IntegerConverter implements BindingConverter {
     return value != null && value is int ? value.toString() : '0';
   }
   Object convertToModel(Object value) {
-    return Math.parseInt(value.toString().trim());
+    try {
+      return Math.parseInt(value.toString().trim());
+    } catch (var e) {
+      throw new ValidationError('Must be a number');
+    }
   }
 }

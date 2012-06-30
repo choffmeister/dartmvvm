@@ -5,21 +5,17 @@ class TextBinding extends BindingBase {
   }
 
   void apply() {
-    bindingDescription.viewModel.addListener(_viewModelChanged);
-    _toView();
+    viewModel.addListener(_viewModelChanged);
+    element.text = modelValue;
   }
 
   void unapply() {
-    bindingDescription.viewModel.removeListener(_viewModelChanged);
+    viewModel.removeListener(_viewModelChanged);
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == bindingDescription.propertyName) {
-      _toView();
+    if (event.propertyName == propertyName) {
+      element.text = modelValue;
     }
-  }
-
-  void _toView() {
-    bindingDescription.element.text = convertFromModel(bindingDescription.viewModel[bindingDescription.propertyName]);
   }
 }

@@ -12,6 +12,7 @@
 #source('Converters/BindingConverter.dart');
 #source('Converters/IntegerConverter.dart');
 #source('Converters/DoubleConverter.dart');
+#source('Converters/BooleanConverter.dart');
 #source('Converters/NormalizedStringConverter.dart');
 #source('Validators/ValidationError.dart');
 #source('Validators/BindingValidator.dart');

@@ -73,6 +73,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
       switch (converterName) {
         case 'int': desc.converterInstances.add(new IntegerConverter()); break;
         case 'double': desc.converterInstances.add(new DoubleConverter()); break;
+        case 'bool': desc.converterInstances.add(new BooleanConverter()); break;
         default: throw 'Unknown converter type';
       }
     }
@@ -87,17 +88,11 @@ class ViewModelBinderImpl implements ViewModelBinder {
   }
 
   void _attachValidators(BindingDescription desc) {
-    if (desc.converterInstances.some((c) => c is IntegerConverter)) {
-      desc.validatorInstances.add(new IntegerValidator());
-    }
-    if (desc.converterInstances.some((c) => c is DoubleConverter)) {
-      desc.validatorInstances.add(new DoubleValidator());
-    }
-
     for (String validatorName in desc.validatorNames) {
       switch (validatorName) {
         case 'int': desc.validatorInstances.add(new IntegerValidator()); break;
         case 'double': desc.validatorInstances.add(new DoubleValidator()); break;
+        case 'bool': desc.validatorInstances.add(new BooleanValidator()); break;
         default: throw 'Unknown validator type';
       }
     }

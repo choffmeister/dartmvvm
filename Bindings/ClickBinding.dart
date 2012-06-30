@@ -10,7 +10,7 @@ class ClickBinding extends BindingBase {
 
   void apply() {
     bindingDescription.element.on.click.add(_elementClicked);
-    _toView();
+    _clickHandler = modelValue;
   }
 
   void unapply() {
@@ -21,12 +21,6 @@ class ClickBinding extends BindingBase {
     if (_clickHandler != null) {
       _clickHandler();
       event.preventDefault();
-    }
-  }
-
-  void _toView() {
-    if (bindingDescription.viewModel[bindingDescription.propertyName] != null) {
-      _clickHandler = bindingDescription.viewModel[bindingDescription.propertyName];
     }
   }
 }

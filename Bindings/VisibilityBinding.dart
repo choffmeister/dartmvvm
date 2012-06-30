@@ -5,20 +5,20 @@ class VisibilityBinding extends BindingBase {
   }
 
   void apply() {
-    bindingDescription.viewModel.addListener(_viewModelChanged);
-    _toView();
+    viewModel.addListener(_viewModelChanged);
+    _setVisibility();
   }
 
   void unapply() {
-    bindingDescription.viewModel.removeListener(_viewModelChanged);
+    viewModel.removeListener(_viewModelChanged);
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {
-    _toView();
+    _setVisibility();
   }
 
-  void _toView() {
-    if (convertFromModel(bindingDescription.viewModel[bindingDescription.propertyName]) == true) {
+  void _setVisibility() {
+    if (modelValue == true) {
       bindingDescription.element.style.removeProperty('display');
     } else {
       bindingDescription.element.style.display = 'none';

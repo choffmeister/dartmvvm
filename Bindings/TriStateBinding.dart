@@ -7,32 +7,27 @@ class TriStateBinding extends BindingBase {
   }
 
   void apply() {
-    bindingDescription.viewModel.addListener(_viewModelChanged);
-    bindingDescription.element.on.click.add(_elementClicked);
-    _toView();
+    viewModel.addListener(_viewModelChanged);
+    element.on.click.add(_elementClicked);
+
+    var curr = modelValue;
+    if (curr != 1 && curr != -1 && curr != 0) modelValue = 0;
+    element.attributes['data-tristate'] = _mapValueToState(modelValue);
   }
 
   void unapply() {
-    bindingDescription.viewModel.removeListener(_viewModelChanged);
-    bindingDescription.element.on.click.remove(_elementClicked);
+    viewModel.removeListener(_viewModelChanged);
+    element.on.click.remove(_elementClicked);
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == bindingDescription.propertyName) {
-      _toView();
+    if (event.propertyName == propertyName) {
+      element.attributes['data-tristate'] = _mapValueToState(modelValue);
     }
   }
 
   void _elementClicked(Event event) {
-    _toModel();
-  }
-
-  void _toModel() {
-    bindingDescription.viewModel[bindingDescription.propertyName] = _toggleValue(bindingDescription.viewModel[bindingDescription.propertyName]);
-  }
-
-  void _toView() {
-    bindingDescription.element.attributes['data-tristate'] = _mapValueToState(bindingDescription.viewModel[bindingDescription.propertyName]);
+    modelValue = _toggleValue(modelValue);
   }
 
   String _mapValueToState(int value) {

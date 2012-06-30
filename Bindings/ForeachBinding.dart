@@ -14,17 +14,16 @@ class ForeachBinding extends BindingBase {
   }
 
   void apply() {
-    bindingDescription.viewModel.addListener(_viewModelChanged);
-
+    viewModel.addListener(_viewModelChanged);
     _bindToList();
   }
 
   void unapply() {
-    bindingDescription.viewModel.removeListener(_viewModelChanged);
+    viewModel.removeListener(_viewModelChanged);
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == bindingDescription.propertyName) {
+    if (event.propertyName == propertyName) {
       _bindToList();
     }
   }
@@ -34,7 +33,7 @@ class ForeachBinding extends BindingBase {
   }
 
   void _bindToList() {
-    var current = bindingDescription.viewModel[bindingDescription.propertyName];
+    var current = modelValue;
 
     if (_observableList != null) {
       _observableList.removeHandler(_observableListChanged);
@@ -49,7 +48,7 @@ class ForeachBinding extends BindingBase {
       _iterable = current;
     } else if (current == null) {
       var newList = new ObservableList<ViewModel>();
-      bindingDescription.viewModel[bindingDescription.propertyName] = newList;
+      modelValue = newList;
       _observableList = newList;
       _iterable = newList;
     } else {
@@ -75,6 +74,6 @@ class ForeachBinding extends BindingBase {
       elements.addAll(newElements);
     }
 
-    bindingDescription.element.elements = elements;
+    element.elements = elements;
   }
 }
