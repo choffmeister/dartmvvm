@@ -31,14 +31,18 @@ abstract class BindingBase {
   String get propertyName() => _bindingDescription.propertyName;
   Element get element() => _bindingDescription.element;
 
+  // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
+  Function _viewModelChanged2;
+
   BindingBase(ViewModelBinder vmb, BindingDescription desc)
     : _viewModelBinder = vmb, _bindingDescription = desc, _validationErrors = new List<ValidationError>()
   {
     desc.bindingInstance = this;
+    _viewModelChanged2 = _viewModelChanged;
   }
 
   void apply() {
-    viewModel.addListener(_viewModelChanged);
+    viewModel.addListener(_viewModelChanged2);
     onApply();
     BindingCounter.increaseCounter();
   }
@@ -46,7 +50,7 @@ abstract class BindingBase {
   void unapply() {
     BindingCounter.decreaseCounter();
     onUnapply();
-    viewModel.removeListener(_viewModelChanged);
+    viewModel.removeListener(_viewModelChanged2);
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {

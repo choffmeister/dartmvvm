@@ -1,13 +1,16 @@
 class TriStateBinding extends BindingBase {
   final _valueRotation = const [0, 1, -1];
+  // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
+  Function _elementClicked2;
 
   TriStateBinding(ViewModelBinder vmb, BindingDescription desc)
     : super(vmb, desc)
   {
+    _elementClicked2 = _elementClicked;
   }
 
   void onApply() {
-    element.on.click.add(_elementClicked);
+    element.on.click.add(_elementClicked2);
 
     var curr = modelValue;
     if (curr != 1 && curr != -1 && curr != 0) modelValue = 0;
@@ -15,7 +18,7 @@ class TriStateBinding extends BindingBase {
   }
 
   void onUnapply() {
-    element.on.click.remove(_elementClicked);
+    element.on.click.remove(_elementClicked2);
   }
 
   void onModelChanged() {
