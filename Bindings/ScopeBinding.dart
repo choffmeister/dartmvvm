@@ -6,19 +6,15 @@ class ScopeBinding extends BindingBase {
   {
   }
 
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
+  void onApply() {
     _refreshBinding();
   }
 
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
+  void onUnapply() {
   }
 
-  void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
-      _refreshBinding();
-    }
+  void onModelChanged() {
+    _refreshBinding();
   }
 
   void _refreshBinding() {

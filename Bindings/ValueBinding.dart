@@ -7,21 +7,17 @@ class ValueBinding extends BindingBase {
     _inputElement = element;
   }
 
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
+  void onApply() {
     _inputElement.on.change.add(_elementChanged);
     _inputElement.value = modelValue;
   }
 
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
+  void onUnapply() {
     _inputElement.on.change.remove(_elementChanged);
   }
 
-  void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
-      _inputElement.value = modelValue;
-    }
+  void onModelChanged() {
+    _inputElement.value = modelValue;
   }
 
   void _elementChanged(Event event) {

@@ -6,8 +6,7 @@ class TriStateBinding extends BindingBase {
   {
   }
 
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
+  void onApply() {
     element.on.click.add(_elementClicked);
 
     var curr = modelValue;
@@ -15,15 +14,12 @@ class TriStateBinding extends BindingBase {
     element.attributes['data-tristate'] = _mapValueToState(modelValue);
   }
 
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
+  void onUnapply() {
     element.on.click.remove(_elementClicked);
   }
 
-  void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
-      element.attributes['data-tristate'] = _mapValueToState(modelValue);
-    }
+  void onModelChanged() {
+    element.attributes['data-tristate'] = _mapValueToState(modelValue);
   }
 
   void _elementClicked(Event event) {

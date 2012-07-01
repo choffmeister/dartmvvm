@@ -4,6 +4,17 @@ class StyleBinding extends BindingBase {
   {
   }
 
+  void onApply() {
+    _applyStyle();
+  }
+
+  void onUnapply() {
+  }
+
+  void onModelChanged() {
+    _applyStyle();
+  }
+
   void _applyStyle() {
     if (modelValue == true) {
       bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
@@ -13,21 +24,6 @@ class StyleBinding extends BindingBase {
       bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
         element.classes.remove(p.value);
       });
-    }
-  }
-
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
-    _applyStyle();
-  }
-
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
-  }
-
-  void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
-      _applyStyle();
     }
   }
 }

@@ -8,13 +8,17 @@ class ClickBinding extends BindingBase {
   {
   }
 
-  void apply() {
+  void onApply() {
     bindingDescription.element.on.click.add(_elementClicked);
     _clickHandler = modelValue;
   }
 
-  void unapply() {
+  void onUnapply() {
     bindingDescription.element.on.click.remove(_elementClicked);
+  }
+
+  void onModelChanged() {
+
   }
 
   void _elementClicked(MouseEvent event) {

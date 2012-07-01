@@ -4,18 +4,14 @@ class TextBinding extends BindingBase {
   {
   }
 
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
+  void onApply() {
     element.text = modelValue;
   }
 
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
+  void onUnapply() {
   }
 
-  void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
-      element.text = modelValue;
-    }
+  void onModelChanged() {
+    element.text = modelValue;
   }
 }

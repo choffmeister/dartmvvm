@@ -18,6 +18,26 @@ abstract class BindingBase {
     desc.bindingInstance = this;
   }
 
+  void apply() {
+    viewModel.addListener(_viewModelChanged);
+    onApply();
+  }
+
+  void unapply() {
+    onUnapply();
+    viewModel.removeListener(_viewModelChanged);
+  }
+
+  void _viewModelChanged(PropertyChangedEvent event) {
+    if (event.propertyName == propertyName) {
+      onModelChanged();
+    }
+  }
+
+  abstract void onApply();
+  abstract void onUnapply();
+  abstract void onModelChanged();
+
   get modelValue() {
     var value = _bindingDescription.viewModel[_bindingDescription.propertyName];
 
@@ -56,7 +76,4 @@ abstract class BindingBase {
       }
     }
   }
-
-  abstract void apply();
-  abstract void unapply();
 }

@@ -4,16 +4,14 @@ class VisibilityBinding extends BindingBase {
   {
   }
 
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
+  void onApply() {
     _setVisibility();
   }
 
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
+  void onUnapply() {
   }
 
-  void _viewModelChanged(PropertyChangedEvent event) {
+  void onModelChanged() {
     _setVisibility();
   }
 

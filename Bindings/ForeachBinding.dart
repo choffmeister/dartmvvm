@@ -13,19 +13,15 @@ class ForeachBinding extends BindingBase {
      _itemBindingGroups = new List<BindingGroup>();
   }
 
-  void apply() {
-    viewModel.addListener(_viewModelChanged);
+  void onApply() {
     _bindToList();
   }
 
-  void unapply() {
-    viewModel.removeListener(_viewModelChanged);
+  void onUnapply() {
   }
 
-  void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
-      _bindToList();
-    }
+  void onModelChanged() {
+    _bindToList();
   }
 
   void _observableListChanged(ObservableListChangedEvent event) {
