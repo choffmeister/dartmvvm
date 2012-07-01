@@ -10,6 +10,7 @@
 #source('ObservableList.dart');
 #source('ObservableListChangedEvent.dart');
 #source('ViewModel.dart');
+#source('WrappingViewModel.dart');
 #source('ListViewModel.dart');
 #source('BindingDescription.dart');
 #source('Converters/BindingConverter.dart');

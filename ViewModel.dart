@@ -6,6 +6,7 @@ interface ViewModel default ViewModelImpl {
 
   operator [](String key);
   operator []=(String, Object value);
+  bool containsKey(String key);
 }
 
 class ViewModelImpl implements ViewModel {
@@ -46,16 +47,14 @@ class ViewModelImpl implements ViewModel {
     }
   }
 
-  // expose the most Map methods to the public
-  bool containsValue(value) => _values.containsValue(value);
-  bool containsKey(value) => _values.containsKey(value);
   operator [](String key) {
-    if (this.containsKey(key)) {
+    if (_values.containsKey(key)) {
       return _values[key];
     } else {
       return null;
     }
   }
+
   operator []=(String key, Object value) {
     var currentValue = this[key];
     if (currentValue != value) {
@@ -63,9 +62,6 @@ class ViewModelImpl implements ViewModel {
       _notifyListeners(key, currentValue, value);
     }
   }
-  forEach(func(key,value)) => _values.forEach(func);
-  Collection getKeys() => _values.getKeys();
-  Collection getValues() => _values.getValues();
-  int get length() => _values.length;
-  bool isEmpty() => _values.isEmpty();
+
+  bool containsKey(String key) => _values.containsKey(key);
 }
