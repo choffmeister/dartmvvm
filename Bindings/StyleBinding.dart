@@ -1,20 +1,18 @@
 class StyleBinding extends BindingBase {
-  String _cssClass;
-
   StyleBinding(ViewModelBinder vmb, BindingDescription desc)
     : super(vmb, desc)
   {
-      BindingParameter param = null;
-      desc.parameters.filter((p) => p.key == 'type').forEach((p) => param = p);
-
-      _cssClass = param.options;
   }
 
   void _applyStyle() {
     if (modelValue == true) {
-      element.classes.add(_cssClass);
+      bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
+        element.classes.add(p.value);
+      });
     } else {
-      element.classes.remove(_cssClass);
+      bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
+        element.classes.remove(p.value);
+      });
     }
   }
 

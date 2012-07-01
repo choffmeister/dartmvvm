@@ -3,7 +3,7 @@ interface ViewModelBinder default ViewModelBinderImpl {
 
   BindingGroup createGroup(ViewModel viewModel, Element baseElement);
 
-  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Iterable<Element> baseElements);
+  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Collection<Element> baseElements);
 
   BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription bindingDescription);
 }
@@ -13,14 +13,28 @@ class ViewModelBinderImpl implements ViewModelBinder {
   Element _element;
 
   BindingGroup createGroup(ViewModel viewModel, Element baseElement) {
-    List<Element> baseElements = new List<Element>();
-    baseElements.add(baseElement);
-
-    return new BindingGroup(this, viewModel, baseElements);
+    return new BindingGroup(this, viewModel, _searchElements(baseElement));
   }
 
-  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Iterable<Element> baseElements) {
-    return new BindingGroup(this, viewModel, baseElements);
+  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Collection<Element> baseElements) {
+    List<Element> elements = new List<Element>();
+    baseElements.forEach((e) => elements.addAll(_searchElements(e)));
+
+    return new BindingGroup(this, viewModel, elements);
+  }
+
+  List<Element> _searchElements(Element baseElement) {
+    List<Element> result = new List<Element>();
+
+    result.add(baseElement);
+
+    if (!baseElement.attributes.containsKey('data-bind-foreach')) {
+      for (Element subElement in baseElement.elements) {
+        result.addAll(_searchElements(subElement));
+      }
+    }
+
+    return result;
   }
 
   BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription desc) {

@@ -26,16 +26,17 @@ class BindingDescription {
   ViewModel get viewModel() => _viewModel;
   set viewModel(ViewModel value) => _viewModel = value;
 
-  BindingDescription.parse(String str) : _isValid = false {
+  BindingDescription.parse(String bindType, String bindString) : _isValid = false {
+    _typeName = bindType == 'data-bind' ? 'text' : bindType.substring(10);
     _parameters = new List<BindingParameter>();
     _converterInstances = new List<BindingConverter>();
     _validatorInstances = new List<BindingValidator>();
 
-    if (str != null && str != '') {
+    if (bindString != null && bindString != '') {
       RegExp parseRegex = const RegExp(@"^{([a-zA-Z0-9\.]+)(\s*,\s*(.*))?}$");
       RegExp parseRegex2 = const RegExp(@"([^=]+)=([a-zA-Z]+)(\[[^\]]*\])?,?");
 
-      Match match = parseRegex.firstMatch(str);
+      Match match = parseRegex.firstMatch(bindString);
 
       if (match != null) {
         _propertyName = match[1];
@@ -50,14 +51,6 @@ class BindingDescription {
             bp.value = match2[2].trim();
             bp.options = match2[3] != null ? match2[3].substring(1, match2[3].length - 1) : null;
             _parameters.add(bp);
-
-            if (bp.key == 'type') {
-              if (_typeName == null) {
-                _typeName = bp.value;
-              } else {
-                throw 'Binding cannot have more than one type';
-              }
-            }
           }
         }
 
