@@ -51,6 +51,8 @@ class ViewModelBinderImpl implements ViewModelBinder {
   }
 
   BindingBase _guessBindingType(BindingDescription desc) {
+    var boundProperty = desc.viewModel[desc.propertyName];
+
     if (desc.element is InputElement) {
       if (desc.element.attributes['type'].toLowerCase() == 'submit') {
         return new ClickBinding(this, desc);
@@ -59,7 +61,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
       }
     } else if (desc.element is ButtonElement) {
       return new ClickBinding(this, desc);
-    } else if (desc.element is SelectElement || desc.element is TableSectionElement) {
+    } else if (boundProperty is ListViewModel || boundProperty is Iterable) {
       return new ForeachBinding(this, desc);
     }
 
