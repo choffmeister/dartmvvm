@@ -4,16 +4,12 @@ class BindingCounter {
 
   static void increaseCounter() {
     _count++;
-    printCounter();
+    print('++ Active bindings: $_count');
   }
 
   static void decreaseCounter() {
     _count--;
-    printCounter();
-  }
-
-  static void printCounter() {
-    print('Active bindings: $_count');
+    print('-- Active bindings: $_count');
   }
 }
 

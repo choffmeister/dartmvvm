@@ -43,7 +43,8 @@ class BindingGroup {
   }
 
   void unbind() {
-    _bindings.forEach((BindingBase binding) => binding.unbind());
-    _bindings.clear();
+    while (_bindings.length > 0) {
+      _bindings.removeLast().unbind();
+    }
   }
 }
