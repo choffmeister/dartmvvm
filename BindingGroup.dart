@@ -32,8 +32,13 @@ class BindingGroup {
           BindingDescription bindingDescription = new BindingDescription.parse(match[0]);
 
           if (bindingDescription.isValid) {
-            String propertyName = bindingDescription.propertyName;
-            BindingBase binding = _viewModelBinder.createBinding(_viewModel, subElement, bindingDescription);
+            ViewModel vm = _viewModel;
+
+            if (bindingDescription.propertyNamePrecessors.length > 0) {
+              bindingDescription.propertyNamePrecessors.forEach((s) => vm = vm[s]);
+            }
+
+            BindingBase binding = _viewModelBinder.createBinding(vm, subElement, bindingDescription);
 
             if (binding != null) {
               binding.apply();

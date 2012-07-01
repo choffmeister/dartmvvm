@@ -7,7 +7,8 @@
 #import('../_CommonLibrary.dart');
 
 #source('PropertyChangedEvent.dart');
-#source('ListChangedEvent.dart');
+#source('ObservableList.dart');
+#source('ObservableListChangedEvent.dart');
 #source('ViewModel.dart');
 #source('ListViewModel.dart');
 #source('BindingDescription.dart');

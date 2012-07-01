@@ -59,13 +59,11 @@ class ViewModelBinderImpl implements ViewModelBinder {
       }
     } else if (desc.element is ButtonElement) {
       return new ClickBinding(this, desc);
-    } else if (desc.element is DivElement || desc.element is SpanElement || desc.element is ParagraphElement || desc.element is OptionElement || desc.element is TableCellElement) {
-      return new TextBinding(this, desc);
     } else if (desc.element is SelectElement || desc.element is TableSectionElement) {
       return new ForeachBinding(this, desc);
     }
 
-    return null;
+    return new TextBinding(this, desc);
   }
 
   void _attachConverters(BindingDescription desc) {

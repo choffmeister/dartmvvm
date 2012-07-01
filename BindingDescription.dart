@@ -1,5 +1,6 @@
 class BindingDescription {
   bool _isValid;
+  List<String> _propertyNamePrecessors;
   String _propertyName;
   String _typeName;
   List<String> _converterNames;
@@ -11,6 +12,7 @@ class BindingDescription {
   ViewModel _viewModel;
 
   bool get isValid() => _isValid;
+  Collection get propertyNamePrecessors() => _propertyNamePrecessors;
   String get propertyName() => _propertyName;
   String get typeName() => _typeName;
   List<String> get converterNames() => _converterNames;
@@ -31,7 +33,7 @@ class BindingDescription {
     _validatorInstances = new List<BindingValidator>();
 
     if (str != null && str != '') {
-      RegExp parseRegex = const RegExp(@"^{([a-zA-Z0-9]+)(\s*,\s*(.*))?}$");
+      RegExp parseRegex = const RegExp(@"^{([a-zA-Z0-9\.]+)(\s*,\s*(.*))?}$");
       RegExp parseRegex2 = const RegExp(@"([^=]+)=([^,]+),?");
 
       Match match = parseRegex.firstMatch(str);
@@ -56,6 +58,9 @@ class BindingDescription {
             }
           }
         }
+
+        _propertyNamePrecessors = propertyName.split('.');
+        _propertyName = _propertyNamePrecessors.removeLast();
 
         _isValid = true;
       }
