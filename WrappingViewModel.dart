@@ -1,4 +1,4 @@
-class WrappingViewModel extends ViewModelImpl {
+class WrappingViewModel extends ViewModel {
   Map _extraValues;
   List<PropertyChangedListener> _extraListeners;
   ViewModel _inner;

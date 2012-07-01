@@ -1,4 +1,4 @@
-class ListViewModel<E> extends ViewModelImpl {
+class ListViewModel<E> extends ViewModel {
   int get length() => this['length'];
   set _length(int value) => this['length'] = value;
 

@@ -1,19 +1,8 @@
-interface ViewModel default ViewModelImpl {
-  ViewModel();
-
-  void addListener(PropertyChangedListener listener);
-  void removeListener(PropertyChangedListener listener);
-
-  operator [](String key);
-  operator []=(String, Object value);
-  bool containsKey(String key);
-}
-
-class ViewModelImpl implements ViewModel {
+class ViewModel {
   Map _values;
   List<PropertyChangedListener> _listeners;
 
-  ViewModelImpl() : _values = new Map(), _listeners = new List<PropertyChangedListener>() {
+  ViewModel() : _values = new Map(), _listeners = new List<PropertyChangedListener>() {
   }
 
   void addListener(PropertyChangedListener listener) {
