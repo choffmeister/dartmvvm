@@ -51,6 +51,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'visibility': binding = new VisibilityBinding(this, desc); break;
         case 'foreach': binding = new ForeachBinding(this, desc); break;
         case 'style': binding = new StyleBinding(this, desc); break;
+        case 'enabled': binding = new EnabledBinding(this, desc); break;
         default: throw 'Unknown binding type';
       }
     } else {

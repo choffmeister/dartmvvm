@@ -33,5 +33,6 @@
 #source('Bindings/VisibilityBinding.dart');
 #source('Bindings/ForeachBinding.dart');
 #source('Bindings/StyleBinding.dart');
+#source('Bindings/EnabledBinding.dart');
 #source('BindingGroup.dart');
 #source('ViewModelBinder.dart');
