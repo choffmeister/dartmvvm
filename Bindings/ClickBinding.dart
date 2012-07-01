@@ -1,4 +1,4 @@
-typedef void ClickHandler();
+typedef void ClickHandler(MouseEvent event);
 
 class ClickBinding extends BindingBase {
   ClickHandler _clickHandler;
@@ -17,9 +17,9 @@ class ClickBinding extends BindingBase {
     bindingDescription.element.on.click.remove(_elementClicked);
   }
 
-  void _elementClicked(Event event) {
+  void _elementClicked(MouseEvent event) {
     if (_clickHandler != null) {
-      _clickHandler();
+      _clickHandler(event);
       event.preventDefault();
     }
   }
