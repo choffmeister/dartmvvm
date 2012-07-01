@@ -20,6 +20,7 @@
 #source('Converters/NotConverter.dart');
 #source('Converters/NormalizedStringConverter.dart');
 #source('Converters/GuidConverter.dart');
+#source('Converters/NotNullConverter.dart');
 #source('Validators/ValidationError.dart');
 #source('Validators/BindingValidator.dart');
 #source('Validators/IntegerValidator.dart');
@@ -34,5 +35,6 @@
 #source('Bindings/ForeachBinding.dart');
 #source('Bindings/StyleBinding.dart');
 #source('Bindings/EnabledBinding.dart');
+#source('Bindings/ScopeBinding.dart');
 #source('BindingGroup.dart');
 #source('ViewModelBinder.dart');

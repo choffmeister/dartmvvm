@@ -3,6 +3,8 @@ interface ViewModelBinder default ViewModelBinderImpl {
 
   BindingGroup createGroup(ViewModel viewModel, Element baseElement);
 
+  BindingGroup createGroupOnSubElements(ViewModel viewModel, Element baseElement);
+
   BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Collection<Element> baseElements);
 
   BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription bindingDescription);
@@ -14,6 +16,13 @@ class ViewModelBinderImpl implements ViewModelBinder {
 
   BindingGroup createGroup(ViewModel viewModel, Element baseElement) {
     return new BindingGroup(this, viewModel, _searchElements(baseElement));
+  }
+
+  BindingGroup createGroupOnSubElements(ViewModel viewModel, Element baseElement) {
+    List<Element> elements = new List<Element>();
+    baseElement.elements.forEach((e) => elements.addAll(_searchElements(e)));
+
+    return new BindingGroup(this, viewModel, elements);
   }
 
   BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Collection<Element> baseElements) {
@@ -28,7 +37,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
 
     result.add(baseElement);
 
-    if (!baseElement.attributes.containsKey('data-bind-foreach')) {
+    if (!baseElement.attributes.containsKey('data-bind-foreach') && !baseElement.attributes.containsKey('data-bind-scope')) {
       for (Element subElement in baseElement.elements) {
         result.addAll(_searchElements(subElement));
       }
@@ -52,6 +61,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'foreach': binding = new ForeachBinding(this, desc); break;
         case 'style': binding = new StyleBinding(this, desc); break;
         case 'enabled': binding = new EnabledBinding(this, desc); break;
+        case 'scope': binding = new ScopeBinding(this, desc); break;
         default: throw 'Unknown binding type';
       }
     } else {
@@ -92,6 +102,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'bool': desc.converterInstances.add(new BooleanConverter()); break;
         case 'guid': desc.converterInstances.add(new GuidConverter()); break;
         case 'not': desc.converterInstances.add(new NotConverter()); break;
+        case 'notnull': desc.converterInstances.add(new NotNullConverter()); break;
         default: throw 'Unknown converter type';
       }
     }
