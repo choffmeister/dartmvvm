@@ -9,7 +9,7 @@ class TriStateBinding extends BindingBase {
     _elementClicked2 = _elementClicked;
   }
 
-  void onApply() {
+  void onBind() {
     element.on.click.add(_elementClicked2);
 
     var curr = modelValue;
@@ -17,7 +17,7 @@ class TriStateBinding extends BindingBase {
     element.attributes['data-tristate'] = _mapValueToState(modelValue);
   }
 
-  void onUnapply() {
+  void onUnbind() {
     element.on.click.remove(_elementClicked2);
   }
 

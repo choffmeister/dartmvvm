@@ -6,27 +6,31 @@ class ScopeBinding extends BindingBase {
   {
   }
 
-  void onApply() {
-    _refreshBinding();
+  void onBind() {
+    _subBind();
   }
 
-  void onUnapply() {
+  void onUnbind() {
+    _subUnbind();
   }
 
   void onModelChanged() {
-    _refreshBinding();
+    _subUnbind();
+    _subBind();
   }
 
-  void _refreshBinding() {
-    if (_bg != null) {
-      _bg.unapply();
-      _bg = null;
-    }
-
+  void _subBind() {
     var newScope = modelValue;
     if (newScope != null) {
       _bg = viewModelBinder.createGroupOnSubElements(newScope, element);
-      _bg.apply();
+      _bg.bind();
+    }
+  }
+
+  void _subUnbind() {
+    if (_bg != null) {
+      _bg.unbind();
+      _bg = null;
     }
   }
 }

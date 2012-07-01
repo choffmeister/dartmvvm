@@ -10,12 +10,12 @@ class ValueBinding extends BindingBase {
     _elementChanged2 = _elementChanged;
   }
 
-  void onApply() {
+  void onBind() {
     _inputElement.on.change.add(_elementChanged2);
     _inputElement.value = modelValue;
   }
 
-  void onUnapply() {
+  void onUnbind() {
     _inputElement.on.change.remove(_elementChanged2);
   }
 

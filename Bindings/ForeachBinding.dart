@@ -13,48 +13,55 @@ class ForeachBinding extends BindingBase {
      _itemBindingGroups = new List<BindingGroup>();
   }
 
-  void onApply() {
-    _bindToList();
+  void onBind() {
+    _subBind();
   }
 
-  void onUnapply() {
+  void onUnbind() {
+    _subUnbind();
   }
 
   void onModelChanged() {
-    _bindToList();
+    _subUnbind();
+    _subBind();
   }
 
   void _observableListChanged(ObservableListChangedEvent event) {
-    _bindToItems();
+    _subBindItems();
   }
 
-  void _bindToList() {
-    var current = modelValue;
+  void _subBind() {
+    var newList = modelValue;
 
+    if (newList is ListViewModel) {
+      _observableList = newList.items;
+      _iterable = newList.items;
+      _observableList.addHandler(_observableListChanged);
+      _subBindItems();
+    } else if (newList is ObservableList) {
+      _observableList = newList;
+      _iterable = newList;
+      _observableList.addHandler(_observableListChanged);
+      _subBindItems();
+    } else if (newList is Iterable) {
+      _iterable = newList;
+      _subBindItems();
+    } else if (newList == null) {
+      // do nothing
+    } else {
+      throw 'Foreach binds can only be applied to iterables';
+    }
+  }
+
+  void _subUnbind() {
     if (_observableList != null) {
       _observableList.removeHandler(_observableListChanged);
       _observableList = null;
     }
-
-    if (current is ListViewModel) {
-      _observableList = current.items;
-      _iterable = current.items;
-      _observableList.addHandler(_observableListChanged);
-    } else if (current is ObservableList) {
-      _observableList = current;
-      _iterable = current;
-      _observableList.addHandler(_observableListChanged);
-    } else if (current is Iterable) {
-      _iterable = current;
-    } else {
-      throw 'Foreach binds can only be applied to iterables';
-    }
-
-    _bindToItems();
   }
 
-  void _bindToItems() {
-    _itemBindingGroups.forEach((BindingGroup bg) => bg.unapply());
+  void _subBindItems() {
+    _itemBindingGroups.forEach((BindingGroup bg) => bg.unbind());
     _itemBindingGroups.clear();
 
     List<Element> elements = new List<Element>();
@@ -63,7 +70,7 @@ class ForeachBinding extends BindingBase {
       List<Element> newElements = _elementTemplate.map((Element e) => e.clone(true));
 
       BindingGroup bg = viewModelBinder.createGroupOnMultipleElements(item, newElements);
-      bg.apply();
+      bg.bind();
       _itemBindingGroups.add(bg);
 
       elements.addAll(newElements);

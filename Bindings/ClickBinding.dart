@@ -11,12 +11,12 @@ class ClickBinding extends BindingBase {
     _elementClicked2 = _elementClicked;
   }
 
-  void onApply() {
+  void onBind() {
     bindingDescription.element.on.click.add(_elementClicked2);
     _clickHandler = modelValue;
   }
 
-  void onUnapply() {
+  void onUnbind() {
     bindingDescription.element.on.click.remove(_elementClicked2);
   }
 

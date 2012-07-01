@@ -4,11 +4,11 @@ class TextBinding extends BindingBase {
   {
   }
 
-  void onApply() {
+  void onBind() {
     element.text = modelValue;
   }
 
-  void onUnapply() {
+  void onUnbind() {
   }
 
   void onModelChanged() {

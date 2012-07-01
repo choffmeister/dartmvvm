@@ -4,11 +4,11 @@ class VisibilityBinding extends BindingBase {
   {
   }
 
-  void onApply() {
+  void onBind() {
     _setVisibility();
   }
 
-  void onUnapply() {
+  void onUnbind() {
   }
 
   void onModelChanged() {

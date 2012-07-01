@@ -4,11 +4,11 @@ class EnabledBinding extends BindingBase {
   {
   }
 
-  void onApply() {
+  void onBind() {
     _setEnabled();
   }
 
-  void onUnapply() {
+  void onUnbind() {
   }
 
   void onModelChanged() {

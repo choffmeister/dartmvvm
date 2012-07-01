@@ -4,11 +4,11 @@ class StyleBinding extends BindingBase {
   {
   }
 
-  void onApply() {
+  void onBind() {
     _applyStyle();
   }
 
-  void onUnapply() {
+  void onUnbind() {
   }
 
   void onModelChanged() {

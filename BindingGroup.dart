@@ -11,7 +11,7 @@ class BindingGroup {
       _bindings = new List<BindingBase>();
   }
 
-  void apply() {
+  void bind() {
     RegExp splitRegex = const RegExp(@"({[^}{]*})");
 
     for (Element element in _elements) {
@@ -32,7 +32,7 @@ class BindingGroup {
               BindingBase binding = _viewModelBinder.createBinding(vm, element, bindingDescription);
 
               if (binding != null) {
-                binding.apply();
+                binding.bind();
                 _bindings.add(binding);
               }
             }
@@ -42,8 +42,8 @@ class BindingGroup {
     }
   }
 
-  void unapply() {
-    _bindings.forEach((BindingBase binding) => binding.unapply());
+  void unbind() {
+    _bindings.forEach((BindingBase binding) => binding.unbind());
     _bindings.clear();
   }
 }

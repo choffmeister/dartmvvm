@@ -41,15 +41,15 @@ abstract class BindingBase {
     _viewModelChanged2 = _viewModelChanged;
   }
 
-  void apply() {
+  void bind() {
     viewModel.addListener(_viewModelChanged2);
-    onApply();
+    onBind();
     BindingCounter.increaseCounter();
   }
 
-  void unapply() {
+  void unbind() {
     BindingCounter.decreaseCounter();
-    onUnapply();
+    onUnbind();
     viewModel.removeListener(_viewModelChanged2);
   }
 
@@ -59,8 +59,8 @@ abstract class BindingBase {
     }
   }
 
-  abstract void onApply();
-  abstract void onUnapply();
+  abstract void onBind();
+  abstract void onUnbind();
   abstract void onModelChanged();
 
   get modelValue() {
