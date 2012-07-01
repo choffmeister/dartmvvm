@@ -3,8 +3,8 @@ class BindingDescription {
   List<String> _propertyNamePrecessors;
   String _propertyName;
   String _typeName;
-  List<String> _converterNames;
-  List<String> _validatorNames;
+  List<BindingParameter> _parameters;
+
   BindingBase _bindingInstance;
   List<BindingConverter> _converterInstances;
   List<BindingValidator> _validatorInstances;
@@ -15,8 +15,8 @@ class BindingDescription {
   Collection get propertyNamePrecessors() => _propertyNamePrecessors;
   String get propertyName() => _propertyName;
   String get typeName() => _typeName;
-  List<String> get converterNames() => _converterNames;
-  List<String> get validatorNames() => _validatorNames;
+  List<BindingParameter> get parameters() => _parameters;
+
   BindingBase get bindingInstance() => _bindingInstance;
   set bindingInstance(BindingBase value) => _bindingInstance = value;
   List<BindingConverter> get converterInstances() => _converterInstances;
@@ -27,14 +27,13 @@ class BindingDescription {
   set viewModel(ViewModel value) => _viewModel = value;
 
   BindingDescription.parse(String str) : _isValid = false {
-    _converterNames = new List<String>();
-    _validatorNames = new List<String>();
+    _parameters = new List<BindingParameter>();
     _converterInstances = new List<BindingConverter>();
     _validatorInstances = new List<BindingValidator>();
 
     if (str != null && str != '') {
       RegExp parseRegex = const RegExp(@"^{([a-zA-Z0-9\.]+)(\s*,\s*(.*))?}$");
-      RegExp parseRegex2 = const RegExp(@"([^=]+)=([^,]+),?");
+      RegExp parseRegex2 = const RegExp(@"([^=]+)=([a-zA-Z]+)(\[[^\]]*\])?,?");
 
       Match match = parseRegex.firstMatch(str);
 
@@ -46,15 +45,18 @@ class BindingDescription {
             String key = match2[1].toLowerCase();
             String value = match2[2].trim();
 
-            switch (key) {
-              case 'type':
-                _typeName = value.toLowerCase();
-                break;
-              case 'conv':
-                _converterNames.add(value.toLowerCase());
-                break;
-              case 'vali':
-                _validatorNames.add(value.toLowerCase());
+            BindingParameter bp = new BindingParameter();
+            bp.key = match2[1].toLowerCase();
+            bp.value = match2[2].trim();
+            bp.options = match2[3] != null ? match2[3].substring(1, match2[3].length - 1) : null;
+            _parameters.add(bp);
+
+            if (bp.key == 'type') {
+              if (_typeName == null) {
+                _typeName = bp.value;
+              } else {
+                throw 'Binding cannot have more than one type';
+              }
             }
           }
         }
@@ -66,4 +68,10 @@ class BindingDescription {
       }
     }
   }
+}
+
+class BindingParameter {
+  String key;
+  String value;
+  String options;
 }

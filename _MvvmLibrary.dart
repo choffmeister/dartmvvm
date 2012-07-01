@@ -32,5 +32,6 @@
 #source('Bindings/TriStateBinding.dart');
 #source('Bindings/VisibilityBinding.dart');
 #source('Bindings/ForeachBinding.dart');
+#source('Bindings/StyleBinding.dart');
 #source('BindingGroup.dart');
 #source('ViewModelBinder.dart');

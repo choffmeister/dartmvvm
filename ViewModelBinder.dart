@@ -36,6 +36,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'tristate': binding = new TriStateBinding(this, desc); break;
         case 'visibility': binding = new VisibilityBinding(this, desc); break;
         case 'foreach': binding = new ForeachBinding(this, desc); break;
+        case 'style': binding = new StyleBinding(this, desc); break;
         default: throw 'Unknown binding type';
       }
     } else {
@@ -69,8 +70,8 @@ class ViewModelBinderImpl implements ViewModelBinder {
   }
 
   void _attachConverters(BindingDescription desc) {
-    for (String converterName in desc.converterNames) {
-      switch (converterName) {
+    for (BindingParameter conv in desc.parameters.filter((bp) => bp.key == 'conv')) {
+      switch (conv.value) {
         case 'int': desc.converterInstances.add(new IntegerConverter()); break;
         case 'double': desc.converterInstances.add(new DoubleConverter()); break;
         case 'bool': desc.converterInstances.add(new BooleanConverter()); break;
@@ -90,8 +91,8 @@ class ViewModelBinderImpl implements ViewModelBinder {
   }
 
   void _attachValidators(BindingDescription desc) {
-    for (String validatorName in desc.validatorNames) {
-      switch (validatorName) {
+    for (BindingParameter vali in desc.parameters.filter((bp) => bp.key == 'vali')) {
+      switch (vali.value) {
         case 'int': desc.validatorInstances.add(new IntegerValidator()); break;
         case 'double': desc.validatorInstances.add(new DoubleValidator()); break;
         case 'bool': desc.validatorInstances.add(new BooleanValidator()); break;
