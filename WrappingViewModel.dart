@@ -2,8 +2,11 @@ class WrappingViewModel extends ViewModelImpl {
   Map _extraValues;
   List<PropertyChangedListener> _extraListeners;
   ViewModel _inner;
+  List<String> _extraValueNames;
 
-  WrappingViewModel(ViewModel inner)  : _extraValues = new Map(), _extraListeners = new List<PropertyChangedListener>(), _inner = inner {
+  WrappingViewModel(ViewModel inner, List<String> extraValueNames)
+      : _extraValues = new Map(), _extraListeners = new List<PropertyChangedListener>(),
+        _inner = inner, _extraValueNames = extraValueNames {
     _inner.addListener(_innerViewModelChanged);
   }
 
@@ -30,7 +33,7 @@ class WrappingViewModel extends ViewModelImpl {
   }
 
   operator [](String key) {
-    if (_extraValues.containsKey(key)) {
+    if (_extraValueNames.indexOf(key) != -1 && _extraValues.containsKey(key)) {
       return _extraValues[key];
     } else if (_inner.containsKey(key)) {
       return _inner[key];
@@ -42,7 +45,7 @@ class WrappingViewModel extends ViewModelImpl {
   operator []=(String key, Object value) {
     var currentValue = this[key];
     if (currentValue != value) {
-      if (_extraValues.containsKey(key)) {
+      if (_extraValueNames.indexOf(key) != -1) {
         _extraValues[key] = value;
         _notifyListeners(key, currentValue, value);
       } else {
