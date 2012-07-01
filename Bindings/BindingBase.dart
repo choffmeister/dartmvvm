@@ -1,3 +1,22 @@
+class BindingCounter {
+  static int _count = 0;
+  static int get count() => _count;
+
+  static void increaseCounter() {
+    _count++;
+    printCounter();
+  }
+
+  static void decreaseCounter() {
+    _count--;
+    printCounter();
+  }
+
+  static void printCounter() {
+    print('Active bindings: $_count');
+  }
+}
+
 abstract class BindingBase {
   ViewModelBinder _viewModelBinder;
   BindingDescription _bindingDescription;
@@ -21,9 +40,11 @@ abstract class BindingBase {
   void apply() {
     viewModel.addListener(_viewModelChanged);
     onApply();
+    BindingCounter.increaseCounter();
   }
 
   void unapply() {
+    BindingCounter.decreaseCounter();
     onUnapply();
     viewModel.removeListener(_viewModelChanged);
   }
