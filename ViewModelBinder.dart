@@ -62,6 +62,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'style': binding = new StyleBinding(this, desc); break;
         case 'enabled': binding = new EnabledBinding(this, desc); break;
         case 'scope': binding = new ScopeBinding(this, desc); break;
+        case 'attribute': binding = new AttributeBinding(this, desc); break;
         default: throw 'Unknown binding type';
       }
     } else {
@@ -103,6 +104,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'guid': desc.converterInstances.add(new GuidConverter()); break;
         case 'not': desc.converterInstances.add(new NotConverter()); break;
         case 'notnull': desc.converterInstances.add(new NotNullConverter()); break;
+        case 'stringformat': desc.converterInstances.add(new StringFormatConverter(conv)); break;
         default: throw 'Unknown converter type';
       }
     }
