@@ -21,7 +21,7 @@ class ClickBinding extends BindingBase {
   }
 
   void onModelChanged() {
-
+    _clickHandler = modelValue;
   }
 
   void _elementClicked(MouseEvent event) {
