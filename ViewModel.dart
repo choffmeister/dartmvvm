@@ -76,4 +76,6 @@ class ViewModel {
   }
 
   bool containsKey(String key) => _values.containsKey(key);
+
+  String toString() => _values.toString();
 }

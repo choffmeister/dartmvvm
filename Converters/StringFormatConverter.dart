@@ -6,7 +6,7 @@ class StringFormatConverter implements BindingConverter {
 
   Object convertFromModel(Object value) {
     try {
-      return _bindingParameter.options.replaceAll('\$', value);
+      return _bindingParameter.options.replaceAll('\$', value.toString());
     } catch (var e) {
       throw new ValidationError('Error while applying string format');
     }
