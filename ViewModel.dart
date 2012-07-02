@@ -5,22 +5,21 @@ class ViewModel {
   ViewModel() : _values = new Map(), _listeners = new List<PropertyChangedListener>() {
   }
 
-  ViewModel.from(Map map) : _values = map, _listeners = new List<PropertyChangedListener>() {
-  }
+  static from(Object json) {
+    if (json is ViewModel) {
+      return json;
+    } else if (json is Map) {
+      ViewModel vm = new ViewModel();
 
-  static dynamicViewModel(Object json) {
-    if (json is Map) {
-      Map map = new Map();
+      json.forEach((key, value) => vm[key] = ViewModel.from(value));
 
-      json.forEach((key, value) => map[key] = dynamicViewModel(value));
-
-      return new ViewModel.from(map);
+      return vm;
     } else if (json is List) {
-      List list = new List();
+      ListViewModel lvm = new ListViewModel();
 
-      json.forEach((value) => list.add(dynamicViewModel(value)));
+      lvm.items.addAll(json.map((item) => ViewModel.from(item)));
 
-      return new ListViewModel.from(list);
+      return lvm;
     } else {
       return json;
     }

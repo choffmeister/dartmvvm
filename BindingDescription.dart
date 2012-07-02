@@ -9,7 +9,7 @@ class BindingDescription {
   List<BindingConverter> _converterInstances;
   List<BindingValidator> _validatorInstances;
   Element _element;
-  ViewModel _viewModel;
+  Object _model;
 
   bool get isValid() => _isValid;
   Collection get propertyNamePrecessors() => _propertyNamePrecessors;
@@ -23,8 +23,8 @@ class BindingDescription {
   List<BindingValidator> get validatorInstances() => _validatorInstances;
   Element get element() => _element;
   set element(Element value) => _element = value;
-  ViewModel get viewModel() => _viewModel;
-  set viewModel(ViewModel value) => _viewModel = value;
+  Object get model() => _model;
+  set model(Object value) => _model = value;
 
   BindingDescription.parse(String bindType, String bindString) : _isValid = false {
     _typeName = bindType == 'data-bind' ? 'text' : bindType.substring(10);
@@ -33,7 +33,7 @@ class BindingDescription {
     _validatorInstances = new List<BindingValidator>();
 
     if (bindString != null && bindString != '') {
-      RegExp parseRegex = const RegExp(@"^{([a-zA-Z0-9\.]+)(\s*,\s*(.*))?}$");
+      RegExp parseRegex = const RegExp(@"^{(\$?[a-zA-Z0-9\.]+)(\s*,\s*(.*))?}$");
       RegExp parseRegex2 = const RegExp(@"([^=]+)=([a-zA-Z]+)(\[[^\]]*\])?,?");
 
       Match match = parseRegex.firstMatch(bindString);

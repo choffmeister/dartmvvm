@@ -23,7 +23,7 @@ abstract class BindingBase {
   List<ValidationError> get validationErrors() => _validationErrors;
   bool get hasErrors() => _validationErrors.length > 0;
 
-  ViewModel get viewModel() => _bindingDescription.viewModel;
+  Object get model() => _bindingDescription.model;
   String get propertyName() => _bindingDescription.propertyName;
   Element get element() => _bindingDescription.element;
 
@@ -38,7 +38,10 @@ abstract class BindingBase {
   }
 
   void bind() {
-    viewModel.addListener(_viewModelChanged2);
+    if (model is ViewModel) {
+      ViewModel viewModel = model;
+      viewModel.addListener(_viewModelChanged2);
+    }
     onBind();
     BindingCounter.increaseCounter();
   }
@@ -46,7 +49,10 @@ abstract class BindingBase {
   void unbind() {
     BindingCounter.decreaseCounter();
     onUnbind();
-    viewModel.removeListener(_viewModelChanged2);
+    if (model is ViewModel) {
+      ViewModel viewModel = model;
+      viewModel.removeListener(_viewModelChanged2);
+    }
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {
@@ -60,7 +66,18 @@ abstract class BindingBase {
   abstract void onModelChanged();
 
   get modelValue() {
-    var value = _bindingDescription.viewModel[_bindingDescription.propertyName];
+    var value;
+
+    if (_bindingDescription.propertyName != '\$this') {
+      if (model is ViewModel) {
+        ViewModel viewModel = model;
+        value = viewModel[_bindingDescription.propertyName];
+      } else {
+        throw 'Cannot navigate through properties of non ViewModel classes';
+      }
+    } else {
+      value = model;
+    }
 
     for (BindingConverter conv in _bindingDescription.converterInstances) {
       value = conv.convertFromModel(value);
@@ -89,8 +106,16 @@ abstract class BindingBase {
           value = conv.convertToModel(value);
         }
 
-        var oldValue = _bindingDescription.viewModel[_bindingDescription.propertyName];
-        _bindingDescription.viewModel[_bindingDescription.propertyName] = value;
+        if (_bindingDescription.propertyName != '\$this') {
+          if (model is ViewModel) {
+            ViewModel viewModel = model;
+            viewModel[_bindingDescription.propertyName] = value;
+          } else {
+            throw 'Cannot navigate through properties of non ViewModel classes';
+          }
+        } else {
+          throw 'Cannot write to \$this binding';
+        }
       } catch (ValidationError e) {
         _validationErrors.add(e);
         print(e);

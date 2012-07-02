@@ -1,35 +1,35 @@
 interface ViewModelBinder default ViewModelBinderImpl {
   ViewModelBinder();
 
-  BindingGroup createGroup(ViewModel viewModel, Element baseElement);
+  BindingGroup createGroup(Object model, Element baseElement);
 
-  BindingGroup createGroupOnSubElements(ViewModel viewModel, Element baseElement);
+  BindingGroup createGroupOnSubElements(Object model, Element baseElement);
 
-  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Collection<Element> baseElements);
+  BindingGroup createGroupOnMultipleElements(Object model, Collection<Element> baseElements);
 
-  BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription bindingDescription);
+  BindingBase createBinding(Object model, Element element, BindingDescription bindingDescription);
 }
 
 class ViewModelBinderImpl implements ViewModelBinder {
   ViewModel _viewModel;
   Element _element;
 
-  BindingGroup createGroup(ViewModel viewModel, Element baseElement) {
-    return new BindingGroup(this, viewModel, _searchElements(baseElement));
+  BindingGroup createGroup(Object model, Element baseElement) {
+    return new BindingGroup(this, ViewModel.from(model), _searchElements(baseElement));
   }
 
-  BindingGroup createGroupOnSubElements(ViewModel viewModel, Element baseElement) {
+  BindingGroup createGroupOnSubElements(Object model, Element baseElement) {
     List<Element> elements = new List<Element>();
     baseElement.elements.forEach((e) => elements.addAll(_searchElements(e)));
 
-    return new BindingGroup(this, viewModel, elements);
+    return new BindingGroup(this, ViewModel.from(model), elements);
   }
 
-  BindingGroup createGroupOnMultipleElements(ViewModel viewModel, Collection<Element> baseElements) {
+  BindingGroup createGroupOnMultipleElements(Object model, Collection<Element> baseElements) {
     List<Element> elements = new List<Element>();
     baseElements.forEach((e) => elements.addAll(_searchElements(e)));
 
-    return new BindingGroup(this, viewModel, elements);
+    return new BindingGroup(this, ViewModel.from(model), elements);
   }
 
   List<Element> _searchElements(Element baseElement) {
@@ -49,54 +49,30 @@ class ViewModelBinderImpl implements ViewModelBinder {
     return result;
   }
 
-  BindingBase createBinding(ViewModel viewModel, Element element, BindingDescription desc) {
+  BindingBase createBinding(Object model, Element element, BindingDescription desc) {
     BindingBase binding = null;
-    desc.viewModel = viewModel;
+    desc.model = model;
     desc.element = element;
 
-    if (desc.typeName != null) {
-      switch (desc.typeName) {
-        case 'value': binding = new ValueBinding(this, desc); break;
-        case 'click': binding = new ClickBinding(this, desc); break;
-        case 'text': binding = new TextBinding(this, desc); break;
-        case 'tristate': binding = new TriStateBinding(this, desc); break;
-        case 'visibility': binding = new VisibilityBinding(this, desc); break;
-        case 'foreach': binding = new ForeachBinding(this, desc); break;
-        case 'style': binding = new StyleBinding(this, desc); break;
-        case 'enabled': binding = new EnabledBinding(this, desc); break;
-        case 'scope': binding = new ScopeBinding(this, desc); break;
-        case 'attribute': binding = new AttributeBinding(this, desc); break;
-        case 'rest': binding = new RestBinding(this, desc); break;
-        default: throw 'Unknown binding type';
-      }
-    } else {
-      binding = _guessBindingType(desc);
+    switch (desc.typeName) {
+      case 'value': binding = new ValueBinding(this, desc); break;
+      case 'click': binding = new ClickBinding(this, desc); break;
+      case 'text': binding = new TextBinding(this, desc); break;
+      case 'tristate': binding = new TriStateBinding(this, desc); break;
+      case 'visibility': binding = new VisibilityBinding(this, desc); break;
+      case 'foreach': binding = new ForeachBinding(this, desc); break;
+      case 'style': binding = new StyleBinding(this, desc); break;
+      case 'enabled': binding = new EnabledBinding(this, desc); break;
+      case 'scope': binding = new ScopeBinding(this, desc); break;
+      case 'attribute': binding = new AttributeBinding(this, desc); break;
+      case 'rest': binding = new RestBinding(this, desc); break;
+      default: throw 'Unknown binding type';
     }
 
-    if (binding != null) {
-      _attachConverters(desc);
-      _attachValidators(desc);
-    }
+    _attachConverters(desc);
+    _attachValidators(desc);
 
     return binding;
-  }
-
-  BindingBase _guessBindingType(BindingDescription desc) {
-    var boundProperty = desc.viewModel[desc.propertyName];
-
-    if (desc.element is InputElement) {
-      if (desc.element.attributes['type'].toLowerCase() == 'submit') {
-        return new ClickBinding(this, desc);
-      } else {
-        return new ValueBinding(this, desc);
-      }
-    } else if (desc.element is ButtonElement) {
-      return new ClickBinding(this, desc);
-    } else if (boundProperty is ListViewModel || boundProperty is Iterable) {
-      return new ForeachBinding(this, desc);
-    }
-
-    return new TextBinding(this, desc);
   }
 
   void _attachConverters(BindingDescription desc) {

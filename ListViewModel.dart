@@ -19,11 +19,6 @@ class ListViewModel<E> extends ViewModel {
     items = new ObservableList<E>();
   }
 
-  ListViewModel.from(List<E> list) {
-    _listChanged2 = _listChanged;
-    items = new ObservableList<E>.from(list);
-  }
-
   void _listChanged(ObservableListChangedEvent event) {
     _length = items.length;
   }

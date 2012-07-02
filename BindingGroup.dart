@@ -1,11 +1,11 @@
 class BindingGroup {
   ViewModelBinder _viewModelBinder;
-  ViewModel _viewModel;
+  Object _model;
   List<Element> _elements;
   List<BindingBase> _bindings;
 
-  BindingGroup(ViewModelBinder viewModelBinder, ViewModel viewModel, Collection<Element> elements)
-    : _viewModelBinder = viewModelBinder, _viewModel = viewModel
+  BindingGroup(ViewModelBinder viewModelBinder, Object model, Collection<Element> elements)
+    : _viewModelBinder = viewModelBinder, _model = model
   {
       _elements = new List<Element>.from(elements);
       _bindings = new List<BindingBase>();
@@ -23,13 +23,17 @@ class BindingGroup {
             BindingDescription bindingDescription = new BindingDescription.parse(attrKey, match[0]);
 
             if (bindingDescription.isValid) {
-              ViewModel vm = _viewModel;
+              Object m = _model;
 
               if (bindingDescription.propertyNamePrecessors.length > 0) {
-                bindingDescription.propertyNamePrecessors.forEach((s) => vm = vm[s]);
+                if (m is ViewModel) {
+                  bindingDescription.propertyNamePrecessors.forEach((s) => m = m[s]);
+                } else {
+                  throw 'Cannot navigate through properties of non ViewModel classes';
+                }
               }
 
-              BindingBase binding = _viewModelBinder.createBinding(vm, element, bindingDescription);
+              BindingBase binding = _viewModelBinder.createBinding(m, element, bindingDescription);
 
               if (binding != null) {
                 binding.bind();

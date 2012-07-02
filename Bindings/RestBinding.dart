@@ -30,14 +30,11 @@ class RestBinding extends BindingBase {
       _requestFuture = _restClient.get(modelValue);
 
       _requestFuture.then((data) {
-        _bg = viewModelBinder.createGroupOnSubElements(ViewModel.dynamicViewModel(data), element);
+        _bg = viewModelBinder.createGroupOnSubElements(data, element);
         _bg.bind();
       });
 
-      _requestFuture.handleException((request) {
-        print(request.status);
-        return true;
-      });
+      _requestFuture.handleException((request) => true);
     }
   }
 
