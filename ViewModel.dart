@@ -1,8 +1,9 @@
 class ViewModel {
-  Map _values;
-  List<PropertyChangedListener> _listeners;
+  final Map _values;
+  final List<PropertyChangedListener> _listeners;
+  final Set<String> _propertyNames;
 
-  ViewModel() : _values = new Map(), _listeners = new List<PropertyChangedListener>() {
+  ViewModel() : _values = new Map(), _listeners = new List<PropertyChangedListener>(), _propertyNames = new Set<String>() {
   }
 
   static from(Object json) {
@@ -60,7 +61,7 @@ class ViewModel {
   }
 
   operator [](String key) {
-    if (_values.containsKey(key)) {
+    if (containsKey(key)) {
       return _values[key];
     } else {
       return null;
@@ -68,6 +69,7 @@ class ViewModel {
   }
 
   operator []=(String key, Object value) {
+    _propertyNames.add(key);
     var currentValue = this[key];
     if (currentValue != value) {
       _values[key] = value;
@@ -75,7 +77,9 @@ class ViewModel {
     }
   }
 
-  bool containsKey(String key) => _values.containsKey(key);
+  Collection<String> getKeys() => _propertyNames.map((key) => key);
+  Collection<Object> getValues() => _values.getValues();
+  bool containsKey(String key) => _propertyNames.contains(key);
 
   String toString() => _values.toString();
 }

@@ -50,6 +50,10 @@ class ViewModelBinderImpl implements ViewModelBinder {
   }
 
   BindingBase createBinding(Object model, Element element, BindingDescription desc) {
+    if (model == null) {
+      throw new BindingException('The model cannot be null', desc);
+    }
+
     BindingBase binding = null;
     desc.model = model;
     desc.element = element;
@@ -66,7 +70,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
       case 'scope': binding = new ScopeBinding(this, desc); break;
       case 'attribute': binding = new AttributeBinding(this, desc); break;
       case 'rest': binding = new RestBinding(this, desc); break;
-      default: throw 'Unknown binding type';
+      default: throw new BindingException('Unknown binding type \'${desc.typeName}\'', desc);
     }
 
     _attachConverters(desc);
@@ -85,7 +89,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'not': desc.converterInstances.add(new NotConverter()); break;
         case 'notnull': desc.converterInstances.add(new NotNullConverter()); break;
         case 'stringformat': desc.converterInstances.add(new StringFormatConverter(conv)); break;
-        default: throw 'Unknown converter type';
+        default: throw new BindingException('Unknown converter type \'${conv.value}\'', desc);
       }
     }
 
@@ -104,7 +108,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'int': desc.validatorInstances.add(new IntegerValidator()); break;
         case 'double': desc.validatorInstances.add(new DoubleValidator()); break;
         case 'bool': desc.validatorInstances.add(new BooleanValidator()); break;
-        default: throw 'Unknown validator type';
+        default: throw new BindingException('Unknown validator type \'${vali.value}\'', desc);
       }
     }
   }

@@ -51,7 +51,7 @@ class ForeachBinding extends BindingBase {
     } else if (newList == null) {
       // do nothing
     } else {
-      throw 'Foreach binds can only be applied to iterables';
+      throw new BindingException('Foreach binds can only be applied to iterables', _bindingDescription);
     }
 
     _subBindItems();

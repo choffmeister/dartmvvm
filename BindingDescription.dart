@@ -4,6 +4,7 @@ class BindingDescription {
   String _propertyName;
   String _typeName;
   List<BindingParameter> _parameters;
+  String _bindString;
 
   BindingBase _bindingInstance;
   List<BindingConverter> _converterInstances;
@@ -12,7 +13,7 @@ class BindingDescription {
   Object _model;
 
   bool get isValid() => _isValid;
-  Collection get propertyNamePrecessors() => _propertyNamePrecessors;
+  List<String> get propertyNamePrecessors() => _propertyNamePrecessors;
   String get propertyName() => _propertyName;
   String get typeName() => _typeName;
   List<BindingParameter> get parameters() => _parameters;
@@ -26,7 +27,7 @@ class BindingDescription {
   Object get model() => _model;
   set model(Object value) => _model = value;
 
-  BindingDescription.parse(String bindType, String bindString) : _isValid = false {
+  BindingDescription.parse(String bindType, String bindString) : _isValid = false, _bindString = bindString {
     _typeName = bindType == 'data-bind' ? 'text' : bindType.substring(10);
     _parameters = new List<BindingParameter>();
     _converterInstances = new List<BindingConverter>();
@@ -61,6 +62,8 @@ class BindingDescription {
       }
     }
   }
+
+  String toString() => _bindString;
 }
 
 class BindingParameter {

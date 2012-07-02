@@ -1,11 +1,13 @@
 #library('elcoma:mvvm');
 
 #import('dart:core');
+#import('dart:coreimpl');
 #import('dart:html');
 #import('dart:json');
 
 #import('../_CommonLibrary.dart');
 
+#source('BindingException.dart');
 #source('PropertyChangedEvent.dart');
 #source('ObservableList.dart');
 #source('ObservableListChangedEvent.dart');

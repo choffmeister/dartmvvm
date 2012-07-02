@@ -7,6 +7,10 @@ class BindingGroup {
   BindingGroup(ViewModelBinder viewModelBinder, Object model, Collection<Element> elements)
     : _viewModelBinder = viewModelBinder, _model = model
   {
+      if (model == null) {
+        throw new BindingException('The model cannot be null', null);
+      }
+
       _elements = new List<Element>.from(elements);
       _bindings = new List<BindingBase>();
   }
@@ -25,20 +29,35 @@ class BindingGroup {
             if (bindingDescription.isValid) {
               Object m = _model;
 
-              if (bindingDescription.propertyNamePrecessors.length > 0) {
-                if (m is ViewModel) {
-                  bindingDescription.propertyNamePrecessors.forEach((s) => m = m[s]);
-                } else {
-                  throw 'Cannot navigate through properties of non ViewModel classes';
+              if (bindingDescription.propertyName != '\$this') {
+                for (String pnp in bindingDescription.propertyNamePrecessors) {
+                  if (pnp == '\$this') {
+                    throw new BindingException('Accessor \'\$this\' is only allowed, if it is the one and only', bindingDescription);
+                  } else if (m is ViewModel) {
+                    if (m.containsKey(pnp)) {
+                      m = m[pnp];
+                    } else {
+                      throw new BindingException('View model \'${m.toString()}\' does not have a property \'${pnp}\'. It only has properties ${m.getKeys()}', bindingDescription);
+                    }
+                  } else {
+                    throw new BindingException('Cannot navigate through properties of Object \'${m.toString()}\', since it does not extend ViewModel', bindingDescription);
+                  }
                 }
+
+                if (m is ViewModel) {
+                  if (!m.containsKey(bindingDescription.propertyName)) {
+                    throw new BindingException('View model \'${m.toString()}\' does not have a property \'${bindingDescription.propertyName}\'. It only has properties ${m.getKeys()}', bindingDescription);
+                  }
+                } else {
+                  throw new BindingException('Object \'${m.toString()}\' does not extend ViewModel', bindingDescription);
+                }
+              } else if (bindingDescription.propertyNamePrecessors.length > 0) {
+                throw new BindingException('Accessor \'\$this\' is only allowed, if it is the one and only', bindingDescription);
               }
 
               BindingBase binding = _viewModelBinder.createBinding(m, element, bindingDescription);
-
-              if (binding != null) {
-                binding.bind();
-                _bindings.add(binding);
-              }
+              binding.bind();
+              _bindings.add(binding);
             }
           }
         }
