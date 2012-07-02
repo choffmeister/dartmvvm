@@ -17,11 +17,14 @@ class ObservableList<E> implements List {
   }
 
   void removeHandler(ObservableListChangedListener listener) {
+    int oldCount = _listListeners.length;
     int index = _listListeners.indexOf(listener);
 
     if (index >= 0) {
       _listListeners.removeRange(index, 1);
     }
+    // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
+    assert(oldCount > _listListeners.length);
   }
 
   void _notifyListListeners() {

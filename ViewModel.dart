@@ -31,11 +31,14 @@ class ViewModel {
   }
 
   void removeListener(PropertyChangedListener listener) {
+    int oldCount = _listeners.length;
     int index = _listeners.indexOf(listener);
 
     if (index >= 0) {
       _listeners.removeRange(index, 1);
     }
+    // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
+    assert(oldCount > _listeners.length);
   }
 
   void _notifyListeners(String propertyName, Object oldValue, Object newValue) {

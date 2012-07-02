@@ -3,22 +3,26 @@ class ForeachBinding extends BindingBase {
   ObservableList _observableList;
   List<Element> _elementTemplate;
   List<BindingGroup> _itemBindingGroups;
+  // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
+  Function _observableListChanged2;
 
   ForeachBinding(ViewModelBinder vmb, BindingDescription desc)
     : super(vmb, desc)
   {
-      _elementTemplate = new List<Element>();
-      bindingDescription.element.elements.forEach((Element e) => _elementTemplate.add(e.clone(true)));
-      bindingDescription.element.elements.clear();
      _itemBindingGroups = new List<BindingGroup>();
+     _observableListChanged2 = _observableListChanged;
   }
 
   void onBind() {
+    _elementTemplate = new List<Element>();
+    element.elements.forEach((Element e) => _elementTemplate.add(e.clone(true)));
+    element.elements.clear();
     _subBind();
   }
 
   void onUnbind() {
     _subUnbind();
+    element.elements = _elementTemplate;
   }
 
   void onModelChanged() {
@@ -37,14 +41,13 @@ class ForeachBinding extends BindingBase {
     if (newList is ListViewModel) {
       _observableList = newList.items;
       _iterable = newList.items;
-      _observableList.addHandler(_observableListChanged);
+      _observableList.addHandler(_observableListChanged2);
     } else if (newList is ObservableList) {
       _observableList = newList;
       _iterable = newList;
-      _observableList.addHandler(_observableListChanged);
+      _observableList.addHandler(_observableListChanged2);
     } else if (newList is Iterable) {
       _iterable = newList;
-
     } else if (newList == null) {
       // do nothing
     } else {
@@ -56,9 +59,10 @@ class ForeachBinding extends BindingBase {
 
   void _subUnbind() {
     if (_observableList != null) {
-      _observableList.removeHandler(_observableListChanged);
+      _observableList.removeHandler(_observableListChanged2);
       _observableList = null;
     }
+    _iterable = null;
 
     _subUnbindItems();
   }

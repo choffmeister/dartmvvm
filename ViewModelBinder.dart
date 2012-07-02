@@ -37,7 +37,10 @@ class ViewModelBinderImpl implements ViewModelBinder {
 
     result.add(baseElement);
 
-    if (!baseElement.attributes.containsKey('data-bind-foreach') && !baseElement.attributes.containsKey('data-bind-scope')) {
+    if (!baseElement.attributes.containsKey('data-bind-foreach') &&
+        !baseElement.attributes.containsKey('data-bind-scope') &&
+        !baseElement.attributes.containsKey('data-bind-rest'))
+    {
       for (Element subElement in baseElement.elements) {
         result.addAll(_searchElements(subElement));
       }
@@ -63,6 +66,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'enabled': binding = new EnabledBinding(this, desc); break;
         case 'scope': binding = new ScopeBinding(this, desc); break;
         case 'attribute': binding = new AttributeBinding(this, desc); break;
+        case 'rest': binding = new RestBinding(this, desc); break;
         default: throw 'Unknown binding type';
       }
     } else {
