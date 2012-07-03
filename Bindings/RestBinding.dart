@@ -8,7 +8,7 @@ class RestBinding extends BindingBase {
   RestBinding(ViewModelBinder vmb, BindingDescription desc)
     : super(vmb, desc)
   {
-    _restClient = ServiceProvider.getService('restClient');
+    _restClient = Services.restClient;
   }
 
   void onBind() {

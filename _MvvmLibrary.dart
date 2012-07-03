@@ -6,6 +6,7 @@
 #import('dart:json');
 
 #import('../_CommonLibrary.dart');
+#import('../../Services/_ServicesLibrary.dart');
 
 #source('BindingException.dart');
 #source('PropertyChangedEvent.dart');
