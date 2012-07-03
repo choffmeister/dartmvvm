@@ -44,4 +44,5 @@
 #source('Bindings/RestBinding.dart');
 #source('BindingGroup.dart');
 #source('ViewModelBinder.dart');
+#source('PageViewModel.dart');
 #source('DialogViewModel.dart');
