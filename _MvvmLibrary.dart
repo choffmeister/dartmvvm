@@ -33,6 +33,7 @@
 #source('Bindings/ValueBinding.dart');
 #source('Bindings/ClickBinding.dart');
 #source('Bindings/DoubleClickBinding.dart');
+#source('Bindings/KeyboardBinding.dart');
 #source('Bindings/TextBinding.dart');
 #source('Bindings/TriStateBinding.dart');
 #source('Bindings/VisibilityBinding.dart');
@@ -42,6 +43,7 @@
 #source('Bindings/ScopeBinding.dart');
 #source('Bindings/AttributeBinding.dart');
 #source('Bindings/RestBinding.dart');
+#source('Bindings/FocusBinding.dart');
 #source('BindingGroup.dart');
 #source('ViewModelBinder.dart');
 #source('PageViewModel.dart');

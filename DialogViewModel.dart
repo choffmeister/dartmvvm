@@ -12,4 +12,8 @@ class DialogViewModel extends ViewModel {
   void finish([Object result]) {
     _completer.complete(result);
   }
+
+  void fail([Object exception]) {
+    _completer.completeException(exception);
+  }
 }

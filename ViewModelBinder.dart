@@ -62,6 +62,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
       case 'value': binding = new ValueBinding(this, bg, desc); break;
       case 'click': binding = new ClickBinding(this, bg, desc); break;
       case 'doubleclick': binding = new DoubleClickBinding(this, bg, desc); break;
+      case 'keyboard': binding = new KeyboardBinding(this, bg, desc); break;
       case 'text': binding = new TextBinding(this, bg, desc); break;
       case 'tristate': binding = new TriStateBinding(this, bg, desc); break;
       case 'visibility': binding = new VisibilityBinding(this, bg, desc); break;
@@ -71,6 +72,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
       case 'scope': binding = new ScopeBinding(this, bg, desc); break;
       case 'attribute': binding = new AttributeBinding(this, bg, desc); break;
       case 'rest': binding = new RestBinding(this, bg, desc); break;
+      case 'focus': binding = new FocusBinding(this, bg, desc); break;
       default: throw new BindingException('Unknown binding type \'${desc.typeName}\'', desc);
     }
 
