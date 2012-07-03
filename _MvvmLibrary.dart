@@ -32,6 +32,7 @@
 #source('Bindings/BindingBase.dart');
 #source('Bindings/ValueBinding.dart');
 #source('Bindings/ClickBinding.dart');
+#source('Bindings/DoubleClickBinding.dart');
 #source('Bindings/TextBinding.dart');
 #source('Bindings/TriStateBinding.dart');
 #source('Bindings/VisibilityBinding.dart');

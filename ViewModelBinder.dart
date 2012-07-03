@@ -61,6 +61,7 @@ class ViewModelBinderImpl implements ViewModelBinder {
     switch (desc.typeName) {
       case 'value': binding = new ValueBinding(this, desc); break;
       case 'click': binding = new ClickBinding(this, desc); break;
+      case 'doubleclick': binding = new DoubleClickBinding(this, desc); break;
       case 'text': binding = new TextBinding(this, desc); break;
       case 'tristate': binding = new TriStateBinding(this, desc); break;
       case 'visibility': binding = new VisibilityBinding(this, desc); break;
