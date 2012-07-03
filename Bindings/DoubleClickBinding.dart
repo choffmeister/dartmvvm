@@ -1,4 +1,4 @@
-typedef void DoubleClickHandler(MouseEvent event);
+typedef void DoubleClickHandler(Object model, MouseEvent event);
 
 class DoubleClickBinding extends BindingBase {
   DoubleClickHandler _doubleClickHandler;
@@ -26,7 +26,7 @@ class DoubleClickBinding extends BindingBase {
 
   void _elementClicked(MouseEvent event) {
     if (_doubleClickHandler != null) {
-      _doubleClickHandler(event);
+      _doubleClickHandler(model, event);
       event.preventDefault();
     }
   }

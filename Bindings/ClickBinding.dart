@@ -1,4 +1,4 @@
-typedef void ClickHandler(MouseEvent event);
+typedef void ClickHandler(Object model, MouseEvent event);
 
 class ClickBinding extends BindingBase {
   ClickHandler _clickHandler;
@@ -26,7 +26,7 @@ class ClickBinding extends BindingBase {
 
   void _elementClicked(MouseEvent event) {
     if (_clickHandler != null) {
-      _clickHandler(event);
+      _clickHandler(model, event);
       event.preventDefault();
     }
   }
