@@ -32,7 +32,7 @@ class BindingDescription {
     _validatorInstances = new List<BindingValidator>();
 
     if (bindString != null && bindString != '') {
-      RegExp parseRegex = const RegExp(@"^{(\$?[a-zA-Z0-9\.]+)(\s*,\s*(.*))?}$");
+      RegExp parseRegex = const RegExp(@"^{([^\s,]+)(\s*,\s*(.*))?}$");
       RegExp parseRegex2 = const RegExp(@"([^=]+)=([a-zA-Z]+)(\[[^\]]*\])?,?");
 
       Match match = parseRegex.firstMatch(bindString);
