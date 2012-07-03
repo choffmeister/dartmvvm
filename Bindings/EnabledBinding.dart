@@ -1,6 +1,6 @@
 class EnabledBinding extends BindingBase {
-  EnabledBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  EnabledBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
   }
 

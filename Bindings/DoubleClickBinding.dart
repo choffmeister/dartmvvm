@@ -5,8 +5,8 @@ class DoubleClickBinding extends BindingBase {
   // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
   Function _elementDoubleClicked2;
 
-  DoubleClickBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  DoubleClickBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
     _elementDoubleClicked2 = _elementClicked;
   }

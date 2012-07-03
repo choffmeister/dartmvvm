@@ -1,6 +1,6 @@
 class VisibilityBinding extends BindingBase {
-  VisibilityBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  VisibilityBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
   }
 

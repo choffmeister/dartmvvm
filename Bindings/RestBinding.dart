@@ -5,8 +5,8 @@ class RestBinding extends BindingBase {
   Future<Object> _requestFuture;
 
 
-  RestBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  RestBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
     _restClient = Services.restClient;
   }
@@ -30,7 +30,7 @@ class RestBinding extends BindingBase {
       _requestFuture = _restClient.get(modelValue);
 
       _requestFuture.then((data) {
-        _bg = viewModelBinder.createGroupOnSubElements(data, element);
+        _bg = viewModelBinder.createGroupOnSubElements(bindingGroup, data, element);
         _bg.bind();
       });
 

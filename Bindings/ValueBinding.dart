@@ -3,8 +3,8 @@ class ValueBinding extends BindingBase {
   // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
   Function _elementChanged2;
 
-  ValueBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  ValueBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
     _inputElement = element;
     _elementChanged2 = _elementChanged;

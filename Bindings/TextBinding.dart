@@ -1,6 +1,6 @@
 class TextBinding extends BindingBase {
-  TextBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  TextBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
   }
 

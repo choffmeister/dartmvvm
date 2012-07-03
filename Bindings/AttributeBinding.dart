@@ -1,6 +1,6 @@
 class AttributeBinding extends BindingBase {
-  AttributeBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  AttributeBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
   }
 

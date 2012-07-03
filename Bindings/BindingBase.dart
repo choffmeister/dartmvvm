@@ -4,42 +4,45 @@ class BindingCounter {
 
   static void increaseCounter() {
     _count++;
-    print('++ Active bindings: $_count');
+    //print('++ Active bindings: $_count');
   }
 
   static void decreaseCounter() {
     _count--;
-    print('-- Active bindings: $_count');
+    //print('-- Active bindings: $_count');
   }
 }
 
 abstract class BindingBase {
-  ViewModelBinder _viewModelBinder;
-  BindingDescription _bindingDescription;
+  final ViewModelBinder _viewModelBinder;
+  final BindingGroup _bindingGroup;
+  final BindingDescription _bindingDescription;
+  _BindingTarget _target;
   List<ValidationError> _validationErrors;
 
   ViewModelBinder get viewModelBinder() => _viewModelBinder;
+  BindingGroup get bindingGroup() => _bindingGroup;
   BindingDescription get bindingDescription() => _bindingDescription;
   List<ValidationError> get validationErrors() => _validationErrors;
   bool get hasErrors() => _validationErrors.length > 0;
 
   Object get model() => _bindingDescription.model;
-  String get propertyName() => _bindingDescription.propertyName;
   Element get element() => _bindingDescription.element;
 
   // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
   Function _viewModelChanged2;
 
-  BindingBase(ViewModelBinder vmb, BindingDescription desc)
-    : _viewModelBinder = vmb, _bindingDescription = desc, _validationErrors = new List<ValidationError>()
+  BindingBase(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : _viewModelBinder = vmb, _bindingGroup = bg, _bindingDescription = desc, _validationErrors = new List<ValidationError>()
   {
     desc.bindingInstance = this;
     _viewModelChanged2 = _viewModelChanged;
+    _target = walkAccessor(_bindingGroup, _bindingDescription.model, _bindingDescription.accessor, _bindingDescription);
   }
 
   void bind() {
-    if (model is ViewModel) {
-      ViewModel viewModel = model;
+    if (_target.model is ViewModel) {
+      ViewModel viewModel = _target.model;
       viewModel.addListener(_viewModelChanged2);
     }
     onBind();
@@ -49,14 +52,14 @@ abstract class BindingBase {
   void unbind() {
     BindingCounter.decreaseCounter();
     onUnbind();
-    if (model is ViewModel) {
-      ViewModel viewModel = model;
+    if (_target.model is ViewModel) {
+      ViewModel viewModel = _target.model;
       viewModel.removeListener(_viewModelChanged2);
     }
   }
 
   void _viewModelChanged(PropertyChangedEvent event) {
-    if (event.propertyName == propertyName) {
+    if (event.propertyName == _target.propertyName) {
       onModelChanged();
     }
   }
@@ -68,15 +71,15 @@ abstract class BindingBase {
   get modelValue() {
     var value;
 
-    if (_bindingDescription.propertyName != '\$this') {
-      if (model is ViewModel) {
-        ViewModel viewModel = model;
-        value = viewModel[_bindingDescription.propertyName];
+    if (_target.propertyName != '\$this') {
+      if (_target.model is ViewModel) {
+        ViewModel viewModel = _target.model;
+        value = viewModel[_target.propertyName];
       } else {
         throw 'Cannot navigate through properties of non ViewModel classes';
       }
     } else {
-      value = model;
+      value = _target.model;
     }
 
     for (BindingConverter conv in _bindingDescription.converterInstances) {
@@ -106,10 +109,10 @@ abstract class BindingBase {
           value = conv.convertToModel(value);
         }
 
-        if (_bindingDescription.propertyName != '\$this') {
-          if (model is ViewModel) {
-            ViewModel viewModel = model;
-            viewModel[_bindingDescription.propertyName] = value;
+        if (_target.propertyName != '\$this') {
+          if (_target.model is ViewModel) {
+            ViewModel viewModel = _target.model;
+            viewModel[_target.propertyName] = value;
           } else {
             throw 'Cannot navigate through properties of non ViewModel classes';
           }
@@ -122,4 +125,58 @@ abstract class BindingBase {
       }
     }
   }
+
+  _BindingTarget walkAccessor(BindingGroup startBindingGroup, Object startModel, String accessor, BindingDescription bd) {
+    BindingGroup bg = startBindingGroup;
+    Object m = startModel;
+
+    List<String> accessorParts = accessor.split('.');
+    String propertyName = accessorParts.removeLast();
+
+    if (propertyName != '\$this') {
+      bool prevAllowed = true;
+      for (String accessorPart in accessorParts) {
+        if (accessorPart == '\$this') {
+          throw new BindingException('Accessor \'\$this\' is only allowed, if it is the one and only', bd);
+        } else if (accessorPart == '\$prev') {
+          if (prevAllowed) {
+            if (bg._parentGroup != null) {
+              bg = bg._parentGroup;
+              m = bg._model;
+            } else {
+              throw new BindingException('Cannot navigate up, since the current binding group is already the root', bd);
+            }
+          } else {
+            throw new BindingException('Acessor \'\$prev\' is only allowed at the beginning (more then one are allowed)', bd);
+          }
+        } else if (m is ViewModel) {
+          prevAllowed = false;
+          if (m.containsKey(accessorPart)) {
+            m = m[accessorPart];
+          } else {
+            throw new BindingException('View model ${m} does not have a property \'${accessorPart}\'. It only has properties ${m.getKeys()}', bd);
+          }
+        } else {
+          throw new BindingException('Cannot navigate through properties of Object ${m}, since it does not extend ViewModel', bd);
+        }
+      }
+
+      if (m is ViewModel) {
+        if (!m.containsKey(propertyName)) {
+          throw new BindingException('View model ${m} does not have a property \'${propertyName}\'. It only has properties ${m.getKeys()}', bd);
+        }
+      } else {
+        throw new BindingException('Object ${m} does not extend ViewModel', bd);
+      }
+    }
+
+    return new _BindingTarget(m, propertyName);
+  }
+}
+
+class _BindingTarget {
+  final Object model;
+  final String propertyName;
+
+  _BindingTarget(this.model, this.propertyName);
 }

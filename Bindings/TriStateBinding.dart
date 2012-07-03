@@ -3,8 +3,8 @@ class TriStateBinding extends BindingBase {
   // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
   Function _elementClicked2;
 
-  TriStateBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  TriStateBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
     _elementClicked2 = _elementClicked;
   }

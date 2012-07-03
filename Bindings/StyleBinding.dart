@@ -1,6 +1,6 @@
 class StyleBinding extends BindingBase {
-  StyleBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  StyleBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
   }
 

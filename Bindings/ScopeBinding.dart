@@ -1,8 +1,8 @@
 class ScopeBinding extends BindingBase {
   BindingGroup _bg;
 
-  ScopeBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  ScopeBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
   }
 
@@ -22,7 +22,7 @@ class ScopeBinding extends BindingBase {
   void _subBind() {
     var newScope = modelValue;
     if (newScope != null) {
-      _bg = viewModelBinder.createGroupOnSubElements(newScope, element);
+      _bg = viewModelBinder.createGroupOnSubElements(bindingGroup, newScope, element);
       _bg.bind();
     }
   }

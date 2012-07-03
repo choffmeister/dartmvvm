@@ -1,7 +1,6 @@
 class BindingDescription {
   bool _isValid;
-  List<String> _propertyNamePrecessors;
-  String _propertyName;
+  String _accessor;
   String _typeName;
   List<BindingParameter> _parameters;
   String _bindString;
@@ -13,8 +12,7 @@ class BindingDescription {
   Object _model;
 
   bool get isValid() => _isValid;
-  List<String> get propertyNamePrecessors() => _propertyNamePrecessors;
-  String get propertyName() => _propertyName;
+  String get accessor() => _accessor;
   String get typeName() => _typeName;
   List<BindingParameter> get parameters() => _parameters;
 
@@ -40,7 +38,7 @@ class BindingDescription {
       Match match = parseRegex.firstMatch(bindString);
 
       if (match != null) {
-        _propertyName = match[1];
+        _accessor = match[1];
 
         if (match[3] != null) {
           for (Match match2 in parseRegex2.allMatches(match[3])) {
@@ -54,9 +52,6 @@ class BindingDescription {
             _parameters.add(bp);
           }
         }
-
-        _propertyNamePrecessors = propertyName.split('.');
-        _propertyName = _propertyNamePrecessors.removeLast();
 
         _isValid = true;
       }

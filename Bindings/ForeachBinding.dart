@@ -6,8 +6,8 @@ class ForeachBinding extends BindingBase {
   // due to a bug (see http://code.google.com/p/dart/issues/detail?id=144)
   Function _observableListChanged2;
 
-  ForeachBinding(ViewModelBinder vmb, BindingDescription desc)
-    : super(vmb, desc)
+  ForeachBinding(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
+    : super(vmb, bg, desc)
   {
      _itemBindingGroups = new List<BindingGroup>();
      _observableListChanged2 = _observableListChanged;
@@ -74,7 +74,7 @@ class ForeachBinding extends BindingBase {
       for (Object item in _iterable) {
         List<Element> newElements = _elementTemplate.map((Element e) => e.clone(true));
 
-        BindingGroup bg = viewModelBinder.createGroupOnMultipleElements(item, newElements);
+        BindingGroup bg = viewModelBinder.createGroupOnMultipleElements(bindingGroup, item, newElements);
         bg.bind();
         _itemBindingGroups.add(bg);
 
