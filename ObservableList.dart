@@ -74,6 +74,14 @@ class ObservableList<E> implements List {
     _notifyListListeners();
   }
 
+  void remove(E element) {
+    int i = _inner.indexOf(element);
+    if (i > -1) {
+      _inner.removeRange(i, 1);
+      _notifyListListeners();
+    }
+  }
+
   E removeLast() {
     E item = _inner.removeLast();
     _notifyListListeners();
