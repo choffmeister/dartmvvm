@@ -41,9 +41,13 @@ class ViewModel {
     assert(oldCount > _listeners.length);
   }
 
+  void onModelChanged(PropertyChangedEvent event) {
+  }
+
   void _notifyListeners(String propertyName, Object oldValue, Object newValue) {
     PropertyChangedEvent event = new PropertyChangedEvent(this, propertyName, oldValue, newValue);
 
+    onModelChanged(event);
     _listeners.forEach((PropertyChangedListener l) => l(event));
   }
 
