@@ -46,11 +46,11 @@ abstract class BindingBase {
       viewModel.addListener(_viewModelChanged2);
     }
     onBind();
-    BindingCounter.increaseCounter();
+    //BindingCounter.increaseCounter();
   }
 
   void unbind() {
-    BindingCounter.decreaseCounter();
+    //BindingCounter.decreaseCounter();
     onUnbind();
     if (_target.model is ViewModel) {
       ViewModel viewModel = _target.model;
