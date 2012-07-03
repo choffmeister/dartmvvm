@@ -22,6 +22,4 @@ class ListViewModel<E> extends ViewModel {
   void _listChanged(ObservableListChangedEvent event) {
     _length = items.length;
   }
-
-  String toString() => items.toString();
 }

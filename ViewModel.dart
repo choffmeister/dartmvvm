@@ -80,6 +80,4 @@ class ViewModel {
   Collection<String> getKeys() => _propertyNames.map((key) => key);
   Collection<Object> getValues() => _values.getValues();
   bool containsKey(String key) => _propertyNames.contains(key);
-
-  String toString() => _values.toString();
 }

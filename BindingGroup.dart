@@ -37,19 +37,19 @@ class BindingGroup {
                     if (m.containsKey(pnp)) {
                       m = m[pnp];
                     } else {
-                      throw new BindingException('View model \'${m.toString()}\' does not have a property \'${pnp}\'. It only has properties ${m.getKeys()}', bindingDescription);
+                      throw new BindingException('View model ${m} does not have a property \'${pnp}\'. It only has properties ${m.getKeys()}', bindingDescription);
                     }
                   } else {
-                    throw new BindingException('Cannot navigate through properties of Object \'${m.toString()}\', since it does not extend ViewModel', bindingDescription);
+                    throw new BindingException('Cannot navigate through properties of Object ${m}, since it does not extend ViewModel', bindingDescription);
                   }
                 }
 
                 if (m is ViewModel) {
                   if (!m.containsKey(bindingDescription.propertyName)) {
-                    throw new BindingException('View model \'${m.toString()}\' does not have a property \'${bindingDescription.propertyName}\'. It only has properties ${m.getKeys()}', bindingDescription);
+                    throw new BindingException('View model ${m} does not have a property \'${bindingDescription.propertyName}\'. It only has properties ${m.getKeys()}', bindingDescription);
                   }
                 } else {
-                  throw new BindingException('Object \'${m.toString()}\' does not extend ViewModel', bindingDescription);
+                  throw new BindingException('Object ${m} does not extend ViewModel', bindingDescription);
                 }
               } else if (bindingDescription.propertyNamePrecessors.length > 0) {
                 throw new BindingException('Accessor \'\$this\' is only allowed, if it is the one and only', bindingDescription);
