@@ -10,7 +10,9 @@ class TriStateBinding extends BindingBase {
   }
 
   void onBind() {
-    element.on.click.add(_elementClicked2);
+    if (!bindingDescription.parameters.some((p) => p.key == 'readonly' && p.value == 'true')) {
+      element.on.click.add(_elementClicked2);
+    }
 
     var curr = modelValue;
     if (curr != 1 && curr != -1 && curr != 0) modelValue = 0;
@@ -18,7 +20,9 @@ class TriStateBinding extends BindingBase {
   }
 
   void onUnbind() {
-    element.on.click.remove(_elementClicked2);
+    if (!bindingDescription.parameters.some((p) => p.key == 'readonly' && p.value == 'true')) {
+      element.on.click.remove(_elementClicked2);
+    }
   }
 
   void onModelChanged() {

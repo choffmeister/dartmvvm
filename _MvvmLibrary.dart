@@ -23,6 +23,7 @@
 #source('Converters/NormalizedStringConverter.dart');
 #source('Converters/GuidConverter.dart');
 #source('Converters/NotNullConverter.dart');
+#source('Converters/NotEmptyConverter.dart');
 #source('Converters/StringFormatConverter.dart');
 #source('Validators/ValidationError.dart');
 #source('Validators/BindingValidator.dart');
