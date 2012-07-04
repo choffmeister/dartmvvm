@@ -1,3 +1,18 @@
+class BindingGroupCounter {
+  static int _count = 0;
+  static int get count() => _count;
+
+  static void increaseCounter() {
+    _count++;
+    print('++ Active bindinggroups: $_count');
+  }
+
+  static void decreaseCounter() {
+    _count--;
+    print('-- Active bindinggroups: $_count');
+  }
+}
+
 class BindingGroup {
   final ViewModelBinder _viewModelBinder;
   final BindingGroup _parentGroup;
@@ -36,9 +51,11 @@ class BindingGroup {
         }
       });
     }
+    //BindingGroupCounter.increaseCounter();
   }
 
   void unbind() {
+    //BindingGroupCounter.decreaseCounter();
     while (_bindings.length > 0) {
       _bindings.removeLast().unbind();
     }

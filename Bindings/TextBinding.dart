@@ -5,13 +5,17 @@ class TextBinding extends BindingBase {
   }
 
   void onBind() {
-    element.text = modelValue;
+    onModelChanged();
   }
 
   void onUnbind() {
   }
 
   void onModelChanged() {
-    element.text = modelValue;
+    if (bindingDescription.parameters.some((p) => p.key == 'html' && p.value == 'true')) {
+      element.innerHTML = modelValue;
+    } else {
+      element.text = modelValue;
+    }
   }
 }
