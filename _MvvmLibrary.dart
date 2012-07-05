@@ -43,7 +43,6 @@
 #source('Bindings/EnabledBinding.dart');
 #source('Bindings/ScopeBinding.dart');
 #source('Bindings/AttributeBinding.dart');
-#source('Bindings/RestBinding.dart');
 #source('Bindings/FocusBinding.dart');
 #source('BindingGroup.dart');
 #source('ViewModelBinder.dart');

@@ -71,7 +71,6 @@ class ViewModelBinderImpl implements ViewModelBinder {
       case 'enabled': binding = new EnabledBinding(this, bg, desc); break;
       case 'scope': binding = new ScopeBinding(this, bg, desc); break;
       case 'attribute': binding = new AttributeBinding(this, bg, desc); break;
-      case 'rest': binding = new RestBinding(this, bg, desc); break;
       case 'focus': binding = new FocusBinding(this, bg, desc); break;
       default: throw new BindingException('Unknown binding type \'${desc.typeName}\'', desc);
     }
