@@ -18,13 +18,10 @@ abstract class BindingBase {
   final BindingGroup _bindingGroup;
   final BindingDescription _bindingDescription;
   _BindingTarget _target;
-  List<ValidationError> _validationErrors;
 
   ViewModelBinder get viewModelBinder() => _viewModelBinder;
   BindingGroup get bindingGroup() => _bindingGroup;
   BindingDescription get bindingDescription() => _bindingDescription;
-  List<ValidationError> get validationErrors() => _validationErrors;
-  bool get hasErrors() => _validationErrors.length > 0;
 
   Object get model() => _bindingDescription.model;
   Element get element() => _bindingDescription.element;
@@ -33,7 +30,7 @@ abstract class BindingBase {
   Function _viewModelChanged2;
 
   BindingBase(ViewModelBinder vmb, BindingGroup bg, BindingDescription desc)
-    : _viewModelBinder = vmb, _bindingGroup = bg, _bindingDescription = desc, _validationErrors = new List<ValidationError>()
+    : _viewModelBinder = vmb, _bindingGroup = bg, _bindingDescription = desc
   {
     desc.bindingInstance = this;
     _viewModelChanged2 = _viewModelChanged;
@@ -71,15 +68,15 @@ abstract class BindingBase {
   get modelValue() {
     var value;
 
-    if (_target.propertyName != '\$this') {
+    if (_target.propertyName == '\$this') {
+      value = _target.model;
+    } else {
       if (_target.model is ViewModel) {
         ViewModel viewModel = _target.model;
         value = viewModel[_target.propertyName];
       } else {
         throw 'Cannot navigate through properties of non ViewModel classes';
       }
-    } else {
-      value = _target.model;
     }
 
     for (BindingConverter conv in _bindingDescription.converterInstances) {
@@ -91,13 +88,20 @@ abstract class BindingBase {
 
   set modelValue(var value) {
     bool foundValidationError = false;
-    _validationErrors.clear();
+    if (_target.model is ViewModelWithValidationErrors) {
+      ViewModelWithValidationErrors vet = _target.model;
+      vet.validationErrors.items.clear();
+    }
 
     for (BindingValidator vali in _bindingDescription.validatorInstances) {
       try {
         vali.validate(value);
       } catch (ValidationError e) {
-        _validationErrors.add(e);
+        if (_target.model is ViewModelWithValidationErrors) {
+          ViewModelWithValidationErrors vet = _target.model;
+          vet.validationErrors.items.add(e);
+        }
+
         foundValidationError = true;
         print(e);
       }
@@ -109,18 +113,22 @@ abstract class BindingBase {
           value = conv.convertToModel(value);
         }
 
-        if (_target.propertyName != '\$this') {
+        if (_target.propertyName == '\$this') {
+          throw 'Cannot write to \$this binding';
+        } else {
           if (_target.model is ViewModel) {
             ViewModel viewModel = _target.model;
             viewModel[_target.propertyName] = value;
           } else {
             throw 'Cannot navigate through properties of non ViewModel classes';
           }
-        } else {
-          throw 'Cannot write to \$this binding';
         }
       } catch (ValidationError e) {
-        _validationErrors.add(e);
+        if (_target.model is ViewModelWithValidationErrors) {
+          ViewModelWithValidationErrors vet = _target.model;
+          vet.validationErrors.items.add(e);
+        }
+
         print(e);
       }
     }

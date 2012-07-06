@@ -89,7 +89,6 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'guid': desc.converterInstances.add(new GuidConverter()); break;
         case 'not': desc.converterInstances.add(new NotConverter()); break;
         case 'notnull': desc.converterInstances.add(new NotNullConverter()); break;
-        case 'notempty': desc.converterInstances.add(new NotEmptyConverter()); break;
         case 'stringformat': desc.converterInstances.add(new StringFormatConverter(conv)); break;
         default: throw new BindingException('Unknown converter type \'${conv.value}\'', desc);
       }

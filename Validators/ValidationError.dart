@@ -1,9 +1,9 @@
-class ValidationError {
-  String _message;
+class ValidationError extends ViewModel {
+  String get message() => this['message'];
 
-  String get message() => _message;
-
-  ValidationError(String message) : _message = message;
+  ValidationError(String message) {
+    this['message'] = message;
+  }
 
   String toString() => message;
 }
