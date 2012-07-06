@@ -33,7 +33,6 @@
 #source('Bindings/BindingBase.dart');
 #source('Bindings/ValueBinding.dart');
 #source('Bindings/ClickBinding.dart');
-#source('Bindings/DoubleClickBinding.dart');
 #source('Bindings/KeyboardBinding.dart');
 #source('Bindings/TextBinding.dart');
 #source('Bindings/TriStateBinding.dart');
