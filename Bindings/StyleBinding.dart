@@ -16,14 +16,18 @@ class StyleBinding extends BindingBase {
   }
 
   void _applyStyle() {
-    if (modelValue == true) {
-      bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
+    var newValue = modelValue;
+
+    bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
+      if (newValue == true) {
         element.classes.add(p.value);
-      });
-    } else {
-      bindingDescription.parameters.filter((p) => p.key == 'toggleclass').forEach((p) {
+      } else {
         element.classes.remove(p.value);
-      });
-    }
+      }
+    });
+
+    bindingDescription.parameters.filter((p) => p.key == 'name').forEach((p) {
+      element.style.setProperty(p.value, newValue);
+    });
   }
 }

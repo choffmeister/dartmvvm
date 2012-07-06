@@ -13,10 +13,12 @@ class ClickBinding extends BindingBase {
 
   void onBind() {
     bindingDescription.element.on.click.add(_elementClicked2);
+    bindingDescription.element.style.setProperty('cursor', 'pointer');
     _clickHandler = modelValue;
   }
 
   void onUnbind() {
+    bindingDescription.element.style.removeProperty('cursor');
     bindingDescription.element.on.click.remove(_elementClicked2);
   }
 
