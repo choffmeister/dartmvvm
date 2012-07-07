@@ -86,7 +86,6 @@ class ViewModelBinderImpl implements ViewModelBinder {
         case 'int': desc.converterInstances.add(new IntegerConverter()); break;
         case 'double': desc.converterInstances.add(new DoubleConverter()); break;
         case 'bool': desc.converterInstances.add(new BooleanConverter()); break;
-        case 'guid': desc.converterInstances.add(new GuidConverter()); break;
         case 'not': desc.converterInstances.add(new NotConverter()); break;
         case 'notnull': desc.converterInstances.add(new NotNullConverter()); break;
         case 'stringformat': desc.converterInstances.add(new StringFormatConverter(conv)); break;

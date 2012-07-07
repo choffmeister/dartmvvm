@@ -5,9 +5,6 @@
 #import('dart:html');
 #import('dart:json');
 
-#import('../_CommonLibrary.dart');
-#import('../../Services/_ServicesLibrary.dart');
-
 #source('BindingException.dart');
 #source('ViewModelWithValidationErrors.dart');
 #source('PropertyChangedEvent.dart');
@@ -22,7 +19,6 @@
 #source('Converters/BooleanConverter.dart');
 #source('Converters/NotConverter.dart');
 #source('Converters/NormalizedStringConverter.dart');
-#source('Converters/GuidConverter.dart');
 #source('Converters/NotNullConverter.dart');
 #source('Converters/StringFormatConverter.dart');
 #source('Validators/ValidationError.dart');
