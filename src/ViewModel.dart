@@ -1,10 +1,7 @@
-class ViewModel {
-  final Map _values;
+class ViewModel extends HashMapImplementation<String, Object> {
   final List<PropertyChangedListener> _listeners;
-  final Set<String> _propertyNames;
 
-  ViewModel() : _values = new Map(), _listeners = new List<PropertyChangedListener>(), _propertyNames = new Set<String>() {
-  }
+  ViewModel() : _listeners = new List<PropertyChangedListener>();
 
   static from(Object json) {
     if (json is ViewModel) {
@@ -44,44 +41,25 @@ class ViewModel {
   void onModelChanged(PropertyChangedEvent event) {
   }
 
-  void _notifyListeners(String propertyName, Object oldValue, Object newValue) {
-    PropertyChangedEvent event = new PropertyChangedEvent(this, propertyName, oldValue, newValue);
+  void _notifyListeners(String propertyName) {
+    PropertyChangedEvent event = new PropertyChangedEvent(this, propertyName);
 
     onModelChanged(event);
     _listeners.forEach((PropertyChangedListener l) => l(event));
   }
 
-  noSuchMethod(String functionName, List args) {
-    if (args.length == 0 && functionName.startsWith("get:")) {
-      var propertyName = functionName.replaceFirst("get:", "");
-
-      return this[propertyName];
-    }
-    else if (args.length == 1 && functionName.startsWith("set:")) {
-      var propertyName = functionName.replaceFirst("set:", "");
-
-      this[propertyName] = args[0];
-    }
-  }
-
-  operator [](String key) {
-    if (containsKey(key)) {
-      return _values[key];
+  Object operator [](String key) {
+    if (super.containsKey(key)) {
+      return super[key];
     } else {
-      return null;
+      throw new Exception('View model has no property $key');
     }
   }
 
-  operator []=(String key, Object value) {
-    _propertyNames.add(key);
-    var currentValue = this[key];
-    if (currentValue != value) {
-      _values[key] = value;
-      _notifyListeners(key, currentValue, value);
+  void operator []=(String key, Object value) {
+    if (!super.containsKey(key) || super[key] != value) {
+      super[key] = value;
+      _notifyListeners(key);
     }
   }
-
-  Collection<String> getKeys() => _propertyNames.map((key) => key);
-  Collection<Object> getValues() => _values.getValues();
-  bool containsKey(String key) => _propertyNames.contains(key);
 }
